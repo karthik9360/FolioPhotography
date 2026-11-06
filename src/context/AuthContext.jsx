@@ -17,7 +17,7 @@ const SESSION_KEY = 'folio.auth.session'
 const PENDING_KEY = 'folio.auth.pending'
 const MAX_TIMEOUT_MS = 2_000_000_000 // setTimeout overflows past ~24.8 days
 
-const AuthContext = createContext(null)
+export const AuthContext = createContext(null)
 
 /** Where each role lands after signing in. */
 export const roleHome = {
@@ -174,6 +174,16 @@ export function AuthProvider({ children }) {
     [session, startSession],
   )
 
+  // Demo-only role switcher: becomes one of the three demo identities without a password.
+  const switchIdentity = useCallback(
+    async (role) => {
+      if (!site.demoAuth) throw new api.AuthError('disabled', 'Role switching is only available in demo mode.')
+      const { token } = await api.loginAsDemo(role)
+      startSession(token, false)
+    },
+    [startSession],
+  )
+
   const value = useMemo(
     () => ({
       status: session ? 'authenticated' : 'anonymous',
@@ -187,12 +197,13 @@ export function AuthProvider({ children }) {
       cancelVerification,
       updateAccount: saveAccount,
       updateProfile: saveProfile,
+      switchIdentity,
       logout: signOut,
       checkHandle: api.checkHandle,
       // Demo only: nothing is emailed, so the UI can show the code. Null when demoAuth is off.
       getDemoCode: () => (site.demoAuth && pending ? api.getDemoCode(pending.userId) : null),
     }),
-    [session, pending, login, register, verify, resend, cancelVerification, saveAccount, saveProfile, signOut],
+    [session, pending, login, register, verify, resend, cancelVerification, saveAccount, saveProfile, switchIdentity, signOut],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

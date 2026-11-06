@@ -1,38 +1,87 @@
-@import "@fontsource-variable/bodoni-moda";
+@import "@fontsource-variable/bodoni-moda/opsz.css";
 @import "@fontsource-variable/hanken-grotesk";
+@import "@fontsource-variable/archivo/wdth.css";
 @import "@fontsource/geist-mono/400.css";
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
 /* Tokens. Mirrors DESIGN.md; change both together.                    */
+/* The values below are Studio Dark, the default. Studio Light is the   */
+/* override block after this one, switched by data-theme on <html>      */
+/* (see StudioThemeContext).                                            */
 /* ------------------------------------------------------------------ */
 @theme {
-  --color-paper: #f2f2ef;
-  --color-paper-bright: #fafaf8;
-  --color-ink: #0d0d0c;
-  --color-ink-soft: #4b4b47;
-  --color-hairline: #d6d5d0;
-  --color-signal: #0b2fd0;
-  --color-darkroom: #0d0d0c;
-  --color-darkroom-text: #f2f2ef;
+  /* Warm linen: the default. Base, panels, text, and two accents (gold and olive). */
+  --color-paper: #f5f5f0; /* base: bone-white linen */
+  --color-paper-bright: #f0ede6; /* panels and sheets: muted ivory */
+  --color-photo-wash: #eae7e0; /* champagne taupe: placeholders, drop zones, hover fills */
+  --color-ink: #1f1f1e; /* soft obsidian charcoal: text and headings */
+  --color-ink-soft: #66635d; /* warm grey: secondary text (4.8:1 or better on every surface) */
+  --color-hairline: #d9d4c8; /* very thin lines */
+  --color-signal: #c5a880; /* muted gold: active underlines, loading strip, confirmation buttons. Never text on light. */
+  --color-accent-2: #8c927d; /* architectural olive: hover shift on confirmation buttons, online marks, approvals */
+  --color-on-accent: #1f1f1e; /* text on gold or olive */
+  --color-darkroom: #0a0a0a;
+  --color-darkroom-text: #f5f5f0;
   --color-darkroom-dim: #b4b3ad;
-  --color-photo-wash: #e3e2dd;
-  --color-scrollbar: #a9a8a2;
+  --color-scrollbar: #bdb7aa;
+
+  /* Compact type scale. Nothing is larger than 1rem: text-xl and up are all capped. */
+  --text-micro: 0.625rem;
+  --text-micro--line-height: 1.3;
+  --text-compact: 0.6875rem;
+  --text-compact--line-height: 1.35;
+  --text-xl: 1rem;
+  --text-2xl: 1rem;
+  --text-3xl: 1rem;
+  --text-4xl: 1rem;
+  --text-5xl: 1rem;
+  --text-6xl: 1rem;
+  --text-7xl: 1rem;
+  --text-8xl: 1rem;
+  --text-9xl: 1rem;
+  --text-xl--line-height: 1.2;
+  --text-2xl--line-height: 1.2;
+  --text-3xl--line-height: 1.2;
+  --text-4xl--line-height: 1.2;
+  --text-5xl--line-height: 1.2;
+  --text-6xl--line-height: 1.2;
+  --text-7xl--line-height: 1.2;
+  --text-8xl--line-height: 1.2;
+  --text-9xl--line-height: 1.2;
 
   --font-display: "Bodoni Moda Variable", Didot, "Bodoni 72", serif;
   --font-sans: "Hanken Grotesk Variable", system-ui, sans-serif;
+  --font-condensed: "Archivo Variable", "Arial Narrow", system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
 
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
   --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   --default-transition-duration: 160ms;
 
-  --shadow-drawer: 0 24px 64px -24px rgb(13 13 12 / 0.35);
+  --shadow-drawer: 0 24px 64px -24px rgb(31 31 30 / 0.3);
 }
 
 :root {
-  --margin: 20px;
-  --gutter: 12px;
+  color-scheme: light;
+}
+
+/* Studio Dark, the other option: onyx, bone and taupe, with the same gold and olive. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #0a0a0a;
+  --color-paper-bright: #141413;
+  --color-photo-wash: #161615;
+  --color-ink: #f5f5f5;
+  --color-ink-soft: #8a8a85;
+  --color-hairline: #2a2a28;
+  --color-scrollbar: #4a4a47;
+  --shadow-drawer: 0 24px 64px -24px rgb(0 0 0 / 0.55);
+}
+
+:root {
+  --margin: 16px;
+  --gutter: 8px;
   --crop-offset: 9px;
   --crop-len: 6px;
   --dur-fast: 160ms;
@@ -42,8 +91,8 @@
 
 @media (min-width: 768px) {
   :root {
-    --margin: 40px;
-    --gutter: 20px;
+    --margin: 24px;
+    --gutter: 12px;
     --crop-offset: 14px;
     --crop-len: 10px;
   }
@@ -65,7 +114,8 @@
 
   body {
     min-height: 100svh;
-    line-height: 1.6;
+    font-size: 0.75rem;
+    line-height: 1.4;
   }
 
   :root:has(dialog[open]) {
@@ -74,11 +124,11 @@
 
   ::selection {
     background: var(--color-signal);
-    color: var(--color-paper-bright);
+    color: var(--color-on-accent);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-signal);
+    outline: 2px solid var(--color-ink);
     outline-offset: 3px;
   }
 
@@ -127,22 +177,31 @@
     padding-inline: var(--margin);
   }
 
+  /* Headers: a high-contrast serif in small capitals with open tracking. Bodoni's optical sizing
+     (font-optical-sizing: auto) thickens the hairlines for small sizes. Never larger than 1rem. */
   .display {
     font-family: var(--font-display);
-    font-size: clamp(3rem, 9vw, 5.5rem);
-    line-height: 0.98;
-    letter-spacing: -0.03em;
+    font-size: 1rem;
+    line-height: 1.2;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-optical-sizing: auto;
   }
 
   .headline {
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 3.4vw, 2.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-optical-sizing: auto;
   }
 
+  /* Secondary indicators: uppercase, compressed width (Archivo at 75%), open tracking. */
   .label {
-    font-size: 0.75rem;
+    font-family: var(--font-condensed);
+    font-stretch: 75%;
+    font-size: 0.6875rem;
     font-weight: 500;
     line-height: 1.2;
     letter-spacing: 0.14em;
@@ -150,14 +209,14 @@
   }
 
   .caption {
-    font-size: 0.8125rem;
-    line-height: 1.4;
+    font-size: 0.6875rem;
+    line-height: 1.35;
     letter-spacing: 0.01em;
   }
 
   .data {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.625rem;
     line-height: 1.5;
     font-variant-numeric: tabular-nums;
   }
@@ -174,10 +233,12 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    height: 44px;
-    padding-inline: 24px;
+    height: 32px;
+    padding-inline: 16px;
     border: 1px solid transparent;
-    font-size: 0.75rem;
+    font-family: var(--font-condensed);
+    font-stretch: 75%;
+    font-size: 0.6875rem;
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -195,12 +256,13 @@
     opacity: 0.4;
     pointer-events: none;
   }
+  /* Confirmation buttons: muted gold, charcoal text; they shift to olive on hover. */
   .btn-primary {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-signal);
+    color: var(--color-on-accent);
   }
   .btn-primary:hover {
-    background: var(--color-signal);
+    background: var(--color-accent-2);
   }
   .btn-quiet {
     background: transparent;
@@ -227,8 +289,8 @@
   .icon-btn {
     display: inline-grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
     transition:
       color var(--dur-fast) var(--ease-premium),
       transform var(--dur-fast) var(--ease-premium);
@@ -248,7 +310,8 @@
     transition: color var(--dur-fast) var(--ease-premium);
   }
   .link:hover {
-    color: var(--color-signal);
+    text-decoration-color: var(--color-signal);
+    text-decoration-thickness: 2px;
   }
 
   .nav-link,
@@ -264,7 +327,8 @@
   }
   .nav-link:hover,
   .nav-link[aria-current="page"],
-  .nav-link[aria-pressed="true"] {
+  .nav-link[aria-pressed="true"],
+  .nav-link[aria-selected="true"] {
     color: var(--color-ink);
   }
   .nav-link::after {
@@ -274,13 +338,14 @@
     right: 0;
     bottom: 0;
     height: 1px;
-    background: currentColor;
+    background: var(--color-signal);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform var(--dur-base) var(--ease-premium);
+    transition: transform 160ms var(--ease-premium);
   }
   .nav-link[aria-current="page"]::after,
   .nav-link[aria-pressed="true"]::after,
+  .nav-link[aria-selected="true"]::after,
   .nav-link:hover::after {
     transform: scaleX(1);
   }
@@ -288,25 +353,6 @@
   /* ---------------------------------------------------------------- */
   /* Gallery                                                           */
   /* ---------------------------------------------------------------- */
-  .masonry {
-    columns: 2;
-    column-gap: var(--gutter);
-  }
-  @media (min-width: 900px) {
-    .masonry {
-      columns: 3;
-    }
-  }
-  @media (min-width: 1300px) {
-    .masonry {
-      columns: 4;
-    }
-  }
-  .masonry > * {
-    break-inside: avoid;
-    margin-bottom: calc(var(--gutter) * 2);
-  }
-
   .photo-tile {
     position: relative;
     display: block;
@@ -360,39 +406,256 @@
     outline: none;
   }
 
-  .tile-counters {
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
-    display: flex;
-    gap: 6px;
-    opacity: 0;
-    transform: translateY(6px);
-    transition:
-      opacity var(--dur-base) var(--ease-premium),
-      transform var(--dur-base) var(--ease-premium);
-  }
-  .photo-tile:hover .tile-counters,
-  .photo-tile:focus-visible .tile-counters {
-    opacity: 1;
-    transform: none;
-  }
   @media (hover: none) {
-    .tile-counters {
-      opacity: 1;
-      transform: none;
-    }
     .crop-marks {
       display: none;
     }
   }
-  .counter-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 8px;
+
+  /* ---------------------------------------------------------------- */
+  /* Lookbook: the asymmetric editorial grid                           */
+  /* 12 columns. Hero spreads take 8 (16:9), tall frames take 4 (4:5), */
+  /* in alternating pairs. Spans and ratios live in the markup.        */
+  /* ---------------------------------------------------------------- */
+  .lookbook {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    row-gap: clamp(16px, 2.4vw, 32px);
+  }
+
+  /* The frame holds the stage (the work) and the overlay (its data). */
+  .lookbook-frame {
+    position: relative;
+  }
+  .lookbook-stage {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-photo-wash);
+  }
+  .lookbook-open {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .lookbook-open:focus-visible {
+    outline-offset: -3px;
+  }
+  .lookbook-stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 38%;
+    transition:
+      transform 240ms var(--ease-premium),
+      filter 240ms var(--ease-premium);
+  }
+  /* A thin gold frame fades in around the work on hover or keyboard focus. */
+  .lookbook-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 0 1px var(--color-signal);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms var(--ease-premium);
+  }
+  .lookbook-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline-offset: -3px;
+  }
+
+  /* The overlay: a borderless canvas that glides up from the bottom edge of the frame. */
+  .lookbook-overlay {
+    display: grid;
+    gap: 8px;
+    padding: 10px 12px 12px;
+    background: color-mix(in srgb, var(--color-paper) 97%, transparent);
+    color: var(--color-ink);
+  }
+  .lookbook-note {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--color-ink-soft);
+    background: transparent;
+    color: var(--color-ink);
+    font-size: 0.6875rem;
+    transition: border-color 160ms var(--ease-premium);
+  }
+  .lookbook-note::placeholder {
+    color: var(--color-ink-soft);
+  }
+  .lookbook-note:focus-visible {
+    outline: none;
+    border-bottom-color: var(--color-ink);
+  }
+
+  @media (hover: hover) {
+    .lookbook-frame {
+      overflow: hidden;
+    }
+    .lookbook-overlay {
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      transform: translateY(100%);
+      transition: transform 170ms var(--ease-premium);
+    }
+    .lookbook-stage img {
+      filter: grayscale(0.55) sepia(0.2);
+    }
+    .lookbook-cell:hover .lookbook-stage img,
+    .lookbook-cell:has(:focus-visible) .lookbook-stage img {
+      transform: translate3d(calc(var(--px, 0) * -0.9%), calc(var(--py, 0) * -0.9%), 0) scale(1.025);
+      filter: grayscale(0);
+    }
+    .lookbook-cell:hover .lookbook-stage::after,
+    .lookbook-cell:has(:focus-visible) .lookbook-stage::after {
+      opacity: 1;
+    }
+    .lookbook-cell:hover .lookbook-overlay,
+    .lookbook-cell:has(:focus-visible) .lookbook-overlay {
+      transform: none;
+    }
+  }
+  /* Touch has no hover: no grey, and the overlay is plain text under the image. */
+  @media (hover: none) {
+    .lookbook-overlay {
+      background: transparent;
+      padding: 8px 0 0;
+    }
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Explore: the typographic search index                             */
+  /* ---------------------------------------------------------------- */
+  .index-field {
+    position: relative;
+  }
+  .index-field::before,
+  .index-field::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+  }
+  .index-field::after {
+    background: var(--color-hairline);
+    transition: background-color 160ms var(--ease-premium);
+  }
+  .index-field::before {
+    z-index: 1;
     background: var(--color-ink);
-    color: var(--color-paper);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 160ms var(--ease-premium);
+  }
+  .index-field:hover::after {
+    background: var(--color-ink-soft);
+  }
+  .index-field:focus-within::before {
+    transform: scaleX(1);
+  }
+  .index-input {
+    display: block;
+    width: 100%;
+    padding: 6px 0 8px;
+    border: 0;
+    border-radius: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--color-ink);
+    caret-color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    appearance: none;
+  }
+  .index-input::placeholder {
+    color: var(--color-ink-soft);
+    opacity: 1;
+  }
+  .index-input::-webkit-search-cancel-button,
+  .index-input::-webkit-search-decoration {
+    appearance: none;
+    display: none;
+  }
+
+  .index-list {
+    transition: opacity 160ms var(--ease-premium);
+  }
+  .index-results[data-pending="true"] .index-list {
+    opacity: 0.55;
+  }
+
+  .index-row {
+    display: grid;
+    gap: 2px 16px;
+    padding-block: 8px;
+    align-items: baseline;
+  }
+  .index-row--feeds {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .index-row--feeds .index-thumb {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+  }
+  .index-row--feeds .index-reveal {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .index-row--people {
+      grid-template-columns: minmax(8rem, 1fr) minmax(9rem, 1.1fr) minmax(0, 2.4fr) minmax(6rem, 0.8fr) 3.5rem;
+      align-items: center;
+    }
+    .index-row--feeds {
+      grid-template-columns: minmax(0, 2fr) minmax(7rem, 1fr) minmax(6rem, 1fr) 2.5rem 3rem;
+      align-items: center;
+    }
+    .index-row--feeds .index-thumb {
+      grid-column: auto;
+      grid-row: auto;
+    }
+    .index-row--feeds .index-reveal {
+      display: block;
+    }
+    .index-head {
+      padding-block: 0 8px;
+    }
+  }
+  .index-reveal {
+    justify-self: end;
+    opacity: 0;
+    transform: scale(0.96);
+    transform-origin: right center;
+    transition:
+      opacity 160ms var(--ease-premium),
+      transform 160ms var(--ease-premium);
+  }
+  .index-row:hover .index-reveal,
+  .index-row:focus-visible .index-reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .index-row:focus-visible {
+    outline-offset: 2px;
+  }
+  @media (hover: none) {
+    .index-row--people .index-reveal {
+      display: none;
+    }
+  }
+
+  .lookbook-skeleton {
+    background: var(--color-photo-wash);
   }
 
   /* One authored moment: gallery tiles rise in on first load. */
@@ -524,7 +787,7 @@
     animation: settle var(--dur-base) var(--ease-premium);
   }
   .toggle-icon[aria-pressed="true"] {
-    color: var(--color-signal);
+    color: var(--color-ink);
   }
   .darkroom .toggle-icon[aria-pressed="true"] {
     color: var(--color-darkroom-text);
@@ -543,7 +806,7 @@
   /* ---------------------------------------------------------------- */
   .field-input {
     width: 100%;
-    min-height: 48px;
+    min-height: 32px;
     padding: 0;
     background: transparent;
     border: 0;
@@ -551,23 +814,27 @@
     border-radius: 0;
     color: var(--color-ink);
     font: inherit;
+    font-size: 0.6875rem;
     color-scheme: light;
     transition:
-      border-color var(--dur-fast) var(--ease-premium),
-      box-shadow var(--dur-fast) var(--ease-premium);
+      border-color 160ms var(--ease-premium),
+      box-shadow 160ms var(--ease-premium);
+  }
+  .field-input:hover:not(:focus) {
+    border-bottom-color: var(--color-ink);
   }
   textarea.field-input {
-    padding-block: 12px;
+    padding-block: 6px;
     resize: vertical;
-    min-height: 96px;
+    min-height: 64px;
   }
   .field-input::placeholder {
     color: var(--color-ink-soft);
   }
   .field-input:focus {
     outline: none;
-    border-bottom-color: var(--color-signal);
-    box-shadow: 0 1px 0 0 var(--color-signal);
+    border-bottom-color: var(--color-ink);
+    box-shadow: 0 1px 0 0 var(--color-ink);
   }
   .field-input[aria-invalid="true"] {
     border-bottom-color: var(--color-ink);
@@ -603,7 +870,7 @@
     width: 8px;
     height: 8px;
     border-radius: 9999px;
-    background: var(--color-signal);
+    background: var(--color-ink);
     transform: scale(0.5);
     opacity: 0;
     transition:
@@ -674,7 +941,7 @@
     outline: none;
   }
   .range input[type="range"]:focus-visible::-webkit-slider-thumb {
-    outline: 2px solid var(--color-signal);
+    outline: 2px solid var(--color-ink);
     outline-offset: 3px;
   }
 }
@@ -749,19 +1016,19 @@
     display: flex;
     flex-direction: column;
     min-height: 70svh;
-    padding: 28px var(--margin) 36px;
+    padding: 16px var(--margin) 20px;
   }
   @media (min-width: 1024px) {
     .auth-panel {
       min-height: 100svh;
-      padding: 48px clamp(40px, 6vw, 96px);
+      padding: 24px clamp(24px, 4vw, 48px);
     }
   }
   .auth-stage {
     display: grid;
     flex: 1;
     align-content: center;
-    padding-block: 40px;
+    padding-block: 16px;
   }
   .auth-layer {
     grid-area: 1 / 1;
@@ -771,10 +1038,10 @@
     width: 100%;
   }
   .auth-layer--in {
-    animation: stage-in 260ms var(--ease-premium) both;
+    animation: stage-in 180ms var(--ease-premium) both;
   }
   .auth-layer--out {
-    animation: stage-out 200ms var(--ease-premium) both;
+    animation: stage-out 120ms var(--ease-premium) both;
     pointer-events: none;
   }
   @keyframes stage-in {
@@ -792,9 +1059,11 @@
 
   .auth-title {
     font-family: var(--font-display);
-    font-size: clamp(3rem, 5vw, 4.5rem);
-    line-height: 1.04; /* a little looser than display: titles wrap here, and descenders must clear the next line */
-    letter-spacing: -0.03em;
+    font-size: 1rem;
+    line-height: 1.25;
+    text-transform: uppercase;
+    font-optical-sizing: auto;
+    letter-spacing: 0.12em;
     text-wrap: balance;
   }
   .auth-title:focus {
@@ -836,41 +1105,44 @@
     bottom: 0;
     height: 1px;
     background: var(--color-ink-soft);
-    transition: background-color var(--dur-fast) var(--ease-premium);
+    transition: background-color 160ms var(--ease-premium);
+  }
+  .float-field:hover::before {
+    background: var(--color-ink);
   }
   .float-field::after {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -0.5px;
-    height: 2px;
-    background: var(--color-signal);
+    bottom: 0;
+    height: 1px;
+    background: var(--color-ink);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 180ms var(--ease-premium);
+    transition: transform 160ms var(--ease-premium);
   }
   .float-field:focus-within::after {
     transform: scaleX(1);
   }
   .float-field[data-invalid="true"]::before {
-    height: 2px;
+    height: 1px;
     background: var(--color-ink);
   }
   .float-input {
     display: block;
     width: 100%;
-    height: 58px;
-    padding: 22px 0 6px;
+    height: 40px;
+    padding: 16px 0 4px;
     background: transparent;
     border: 0;
     border-radius: 0;
     color: var(--color-ink);
     font: inherit;
-    font-size: 1.0625rem;
+    font-size: 0.6875rem;
   }
   .float-input--toggle {
-    padding-right: 44px;
+    padding-right: 32px;
   }
   .float-input:focus {
     outline: none;
@@ -886,27 +1158,27 @@
     transform: translateY(-50%);
     transform-origin: left center;
     color: var(--color-ink-soft);
-    font-size: 1.0625rem;
+    font-size: 0.6875rem;
     pointer-events: none;
     transition:
-      transform 180ms var(--ease-premium),
-      color 180ms var(--ease-premium);
+      transform 160ms var(--ease-premium),
+      color 160ms var(--ease-premium);
   }
   .float-input:focus ~ .float-label,
   .float-input:not(:placeholder-shown) ~ .float-label {
-    transform: translateY(calc(-50% - 1.45rem)) scale(0.78);
+    transform: translateY(calc(-50% - 0.85rem)) scale(0.9);
   }
   .float-input:focus ~ .float-label {
     color: var(--color-ink);
   }
   .float-toggle {
     position: absolute;
-    right: -10px;
-    bottom: 4px;
+    right: -4px;
+    bottom: 2px;
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
     color: var(--color-ink-soft);
     transition: color var(--dur-fast) var(--ease-premium);
   }
@@ -915,9 +1187,9 @@
   }
   /* The message line always reserves its height, so errors never move the layout. */
   .float-msg {
-    min-height: 1.5rem;
-    padding-top: 6px;
-    font-size: 0.8125rem;
+    min-height: 1.125rem;
+    padding-top: 4px;
+    font-size: 0.625rem;
     line-height: 1.25;
     letter-spacing: 0.01em;
     color: var(--color-ink-soft);
@@ -975,9 +1247,9 @@
   .btn-auth {
     position: relative;
     width: 100%;
-    height: 56px;
+    height: 36px;
     overflow: hidden;
-    letter-spacing: 0.32em;
+    letter-spacing: 0.24em;
   }
   .btn-auth[aria-busy="true"] {
     pointer-events: none;
@@ -988,8 +1260,8 @@
     left: 0;
     bottom: 0;
     width: 40%;
-    height: 2px;
-    background: var(--color-paper);
+    height: 1px;
+    background: var(--color-on-accent);
     animation: busy 1100ms var(--ease-premium) infinite;
   }
   @keyframes busy {
@@ -1014,7 +1286,7 @@
   }
   .otp-cell {
     width: 100%;
-    height: 68px;
+    height: 40px;
     padding: 0;
     text-align: center;
     background: transparent;
@@ -1023,17 +1295,17 @@
     border-radius: 0;
     color: var(--color-ink);
     font-family: var(--font-display);
-    font-size: 2.5rem;
+    font-size: 1rem;
     line-height: 1;
-    caret-color: var(--color-signal);
+    caret-color: var(--color-ink);
     transition:
       border-color 180ms var(--ease-premium),
       box-shadow 180ms var(--ease-premium);
   }
   .otp-cell:focus {
     outline: none;
-    border-bottom-color: var(--color-signal);
-    box-shadow: 0 1px 0 0 var(--color-signal);
+    border-bottom-color: var(--color-ink);
+    box-shadow: 0 1px 0 0 var(--color-ink);
   }
   .otp-cell[data-filled="true"] {
     border-bottom-color: var(--color-ink);
@@ -1041,8 +1313,8 @@
     animation: digit-in 160ms var(--ease-premium);
   }
   .otp-cell[data-filled="true"]:focus {
-    border-bottom-color: var(--color-signal);
-    box-shadow: 0 1px 0 0 var(--color-signal);
+    border-bottom-color: var(--color-ink);
+    box-shadow: 0 1px 0 0 var(--color-ink);
   }
   .otp-cell[aria-invalid="true"] {
     border-bottom-color: var(--color-ink);
@@ -1164,6 +1436,250 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Sharing                                                               */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* One row in the share list: the app's name, and a small arrow or status at the far edge. */
+  .share-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-height: 32px;
+    text-align: left;
+    transition: color var(--dur-fast) var(--ease-premium);
+  }
+  .share-link:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--color-signal);
+    text-underline-offset: 0.3em;
+  }
+
+  /* A post shared into a conversation: a thumbnail, who made it, a way to open it. */
+  .shared-post {
+    display: flex;
+    gap: 12px;
+    width: min(20rem, 82%);
+    padding: 10px;
+    background: var(--color-photo-wash);
+    color: var(--color-ink);
+    transition: background-color var(--dur-fast) var(--ease-premium);
+  }
+  .shared-post img {
+    width: 56px;
+    height: 70px;
+    flex: none;
+    object-fit: cover;
+  }
+  .shared-post--own {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .shared-post:hover .label {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Studio: progress strip, proofing, billing, curation                   */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* One pixel at the very top of the viewport; it widens and gains opacity as work completes. */
+  .top-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 70;
+    height: 1px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms var(--ease-premium);
+  }
+  .top-progress[data-active="true"] {
+    opacity: calc(0.35 + var(--p, 0) * 0.65);
+  }
+  .top-progress::after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: calc(var(--p, 0) * 100%);
+    background: var(--color-signal);
+    transition: width 180ms var(--ease-premium);
+  }
+
+  /* Invoice status: fine underlines, not badges. */
+  .status {
+    text-underline-offset: 4px;
+  }
+  .status[data-status="draft"],
+  .status[data-status="processing"] {
+    color: var(--color-ink-soft);
+  }
+  .status[data-status="paid"] {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--color-signal);
+  }
+  .status[data-status="overdue"] {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--color-ink);
+  }
+
+  /* Proof status: an open circle that slides and fills into an accent mark in 180ms. */
+  .mark {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--color-ink);
+    border-radius: 9999px;
+    background: transparent;
+    transition:
+      background-color 180ms var(--ease-premium),
+      border-color 180ms var(--ease-premium);
+  }
+  .mark::after {
+    content: "";
+    width: 7px;
+    height: 4px;
+    margin-top: -1px;
+    border: solid var(--color-paper-bright);
+    border-width: 0 0 1.5px 1.5px;
+    transform: rotate(-45deg) scale(0);
+    transition: transform 180ms var(--ease-premium);
+  }
+  .mark[data-state="approved"] {
+    border-color: var(--color-accent-2);
+    background: var(--color-accent-2);
+    animation: mark-in 180ms var(--ease-premium);
+  }
+  .mark[data-state="approved"]::after {
+    transform: rotate(-45deg) scale(1);
+  }
+  @keyframes mark-in {
+    from {
+      transform: translateX(-6px) scale(0.9);
+    }
+  }
+
+  /* A proof watermark, shown or hidden with a short fade. */
+  .watermark-host {
+    position: relative;
+  }
+  .watermark-host::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 180ms var(--ease-premium);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='130'%3E%3Cg transform='rotate(-28 100 65)' font-family='Arial,sans-serif' font-size='13' font-weight='700' letter-spacing='4'%3E%3Ctext x='38' y='70' fill='rgba(0,0,0,0.35)'%3EPROOF%3C/text%3E%3Ctext x='37' y='69' fill='rgba(255,255,255,0.8)'%3EPROOF%3C/text%3E%3C/g%3E%3C/svg%3E");
+  }
+  .watermark-host[data-watermark="true"]::after {
+    opacity: 1;
+  }
+
+  /* Curation: draggable photographs and the piles they glide into. */
+  .asset-frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-photo-wash);
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    transition: opacity 160ms var(--ease-premium);
+  }
+  .asset-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+  .asset-frame[data-pile]:not([data-pile=""]) {
+    opacity: 0.55;
+  }
+  .asset-frame[data-dragging="true"] {
+    z-index: 20;
+    cursor: grabbing;
+    opacity: 1;
+    box-shadow: 0 18px 40px -18px rgb(13 13 12 / 0.5);
+  }
+  .pile {
+    padding-top: 14px;
+    box-shadow: inset 0 1px 0 var(--color-ink-soft);
+    transition:
+      box-shadow var(--dur-fast) var(--ease-premium),
+      background-color var(--dur-fast) var(--ease-premium);
+  }
+  .pile[data-over="true"] {
+    box-shadow: inset 0 2px 0 var(--color-signal);
+    background: rgb(11 47 208 / 0.04);
+  }
+  .swatch {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Root frame: the shell and role transition                             */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .frame-stage {
+    display: grid;
+  }
+  .frame-layer {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+  /* The incoming frame fades up into view; the outgoing one slides slightly left and fades. */
+  .frame-layer--in {
+    animation: frame-in 180ms var(--ease-premium) both;
+  }
+  .frame-layer--out {
+    animation: frame-out 120ms var(--ease-premium) both;
+    pointer-events: none;
+  }
+  @keyframes frame-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  @keyframes frame-out {
+    to {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+  }
+
+  /* Workspaces (Lookbook, Upload, Review...) hand over the same way: out 120ms, in 180ms. */
+  .workspace-stage {
+    display: grid;
+    min-height: calc(100svh - 48px);
+    align-content: start;
+  }
+  .workspace-layer {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+  .workspace-layer--in {
+    animation: frame-in 180ms var(--ease-premium) both;
+  }
+  .workspace-layer--out {
+    animation: frame-out 120ms var(--ease-premium) both;
+    pointer-events: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Upload, settings, toast, messages                                    */
 /* ------------------------------------------------------------------ */
 @layer components {
@@ -1178,34 +1694,37 @@
     }
   }
 
-  /* ---- toast: slides down from the top edge ---- */
+  /* ---- status strip: a full-bleed band on the top edge, text only. Not a floating panel. ---- */
   .toast-region {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 60;
-    display: flex;
-    justify-content: center;
     pointer-events: none;
   }
   .toast {
-    margin: 12px var(--margin) 0;
-    padding: 10px 18px;
-    background: var(--color-ink);
-    color: var(--color-paper);
-    font-size: 0.8125rem;
+    display: block;
+    padding: 8px var(--margin);
+    background: var(--color-signal);
+    color: var(--color-on-accent);
+    font-family: var(--font-condensed);
+    font-stretch: 75%;
+    font-size: 0.6875rem;
+    font-weight: 500;
     line-height: 1.3;
-    letter-spacing: 0.01em;
-    animation: toast-in 240ms var(--ease-premium) both;
+    letter-spacing: 0.16em;
+    text-align: center;
+    text-transform: uppercase;
+    animation: toast-in 180ms var(--ease-premium) both;
   }
   .toast[data-tone="error"] {
     background: var(--color-paper-bright);
     color: var(--color-ink);
-    box-shadow: 0 0 0 1px var(--color-ink);
+    box-shadow: inset 0 -1px 0 var(--color-ink);
   }
   .toast[data-leaving="true"] {
-    animation: toast-out 200ms var(--ease-premium) both;
+    animation: toast-out 160ms var(--ease-premium) both;
   }
   @keyframes toast-in {
     from {
@@ -1256,7 +1775,7 @@
 
   /* Unsaved changes: the baseline turns signal blue (1px), with a short colour transition. */
   .float-field[data-dirty="true"]::before {
-    background: var(--color-signal);
+    background: var(--color-accent-2);
   }
   .float-field--area .float-label {
     top: 30px;
@@ -1301,7 +1820,7 @@
     background: var(--color-paper);
   }
   .switch[data-dirty="true"] {
-    outline: 1px solid var(--color-signal);
+    outline: 1px solid var(--color-accent-2);
     outline-offset: 3px;
   }
 
@@ -1327,27 +1846,35 @@
     transition: border-color var(--dur-base) var(--ease-premium);
   }
   .tag-row[data-dirty="true"] {
-    border-bottom-color: var(--color-signal);
+    border-bottom-color: var(--color-accent-2);
   }
 
   /* ---- drop targets (upload photographs, avatar) ---- */
+  /* The drop zone: a quiet, borderless panel. It tints on hover and while a file is dragged over it. */
   .drop {
     display: block;
-    padding: 40px 0;
-    border-top: 1px solid var(--color-ink-soft);
-    border-bottom: 1px solid var(--color-ink-soft);
+    padding: 24px 16px;
+    background: var(--color-photo-wash);
     cursor: pointer;
-    transition:
-      border-color var(--dur-fast) var(--ease-premium),
-      background-color var(--dur-fast) var(--ease-premium);
+    transition: background-color 160ms var(--ease-premium);
   }
   .drop[data-over="true"],
   .drop:hover {
-    border-color: var(--color-signal);
+    background: color-mix(in srgb, var(--color-photo-wash) 86%, var(--color-signal));
   }
   .drop:focus-within {
-    outline: 2px solid var(--color-signal);
-    outline-offset: 4px;
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+
+  /* A small label on a video's cover: a play mark and its length. */
+  .media-badge {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    padding: 2px 6px;
+    background: var(--color-paper);
+    color: var(--color-ink);
   }
 
   .avatar-drop {
@@ -1357,7 +1884,6 @@
     width: 112px;
     height: 112px;
     overflow: hidden;
-    border-radius: 9999px;
     background: var(--color-ink);
     color: var(--color-paper);
     cursor: pointer;
@@ -1367,17 +1893,17 @@
   }
   .avatar-drop[data-over="true"],
   .avatar-drop:focus-within {
-    outline-color: var(--color-signal);
+    outline-color: var(--color-ink);
   }
   .avatar-drop[data-dirty="true"] {
-    outline-color: var(--color-signal);
+    outline-color: var(--color-accent-2);
     outline-width: 1px;
   }
 
   /* ---- messages ---- */
   .messages-shell {
-    height: calc(100svh - 64px);
-    padding-block: 12px 20px;
+    height: calc(100svh - 48px);
+    padding-block: 8px 12px;
   }
   .thread {
     display: flex;
@@ -1388,24 +1914,23 @@
     transition: background-color var(--dur-fast) var(--ease-premium);
   }
   .thread:hover {
-    background: rgb(227 226 221 / 0.55);
+    background: color-mix(in srgb, var(--color-paper-bright) 60%, transparent);
   }
   .thread[aria-current="page"] {
-    background: var(--color-photo-wash);
+    background: var(--color-paper-bright);
   }
   .presence {
     position: absolute;
     right: -1px;
     bottom: -1px;
-    width: 13px;
-    height: 13px;
-    border-radius: 9999px;
-    border: 2px solid var(--color-paper);
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--color-paper);
     background: var(--color-paper);
-    box-shadow: inset 0 0 0 1.5px var(--color-ink-soft);
+    box-shadow: inset 0 0 0 1px var(--color-ink-soft);
   }
   .presence[data-online="true"] {
-    background: var(--color-signal);
+    background: var(--color-accent-2);
     box-shadow: none;
   }
   .unread {
@@ -1477,7 +2002,6 @@
   .typing i {
     width: 6px;
     height: 6px;
-    border-radius: 9999px;
     background: var(--color-ink-soft);
     animation: typing 1300ms var(--ease-premium) infinite;
   }
@@ -1516,5 +2040,35 @@
     animation-delay: 0ms !important;
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Touch: dense on a pointer, comfortable under a finger. Inputs go up */
+/* to 16px so iOS Safari does not zoom the page when one is focused.   */
+/* ------------------------------------------------------------------ */
+@media (pointer: coarse) {
+  .btn,
+  .icon-btn {
+    min-height: 44px;
+  }
+  .icon-btn {
+    min-width: 44px;
+  }
+  .field-input,
+  .float-input,
+  .lookbook-note,
+  .index-input,
+  .otp-cell,
+  textarea,
+  select {
+    font-size: 1rem;
+  }
+  .float-input {
+    height: 48px;
+    padding-top: 20px;
+  }
+  .float-label {
+    font-size: 1rem;
   }
 }

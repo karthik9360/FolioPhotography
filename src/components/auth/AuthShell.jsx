@@ -16,7 +16,7 @@ export default function AuthShell() {
       <AuthMedia />
       <div className="auth-panel">
         <header>
-          <Link to="/" className="font-display text-[1.625rem] leading-none tracking-[-0.03em]">
+          <Link to="/" className="font-display text-sm uppercase leading-none tracking-[0.32em]">
             {site.name}
           </Link>
         </header>

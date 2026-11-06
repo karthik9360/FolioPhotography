@@ -12,7 +12,7 @@ async function cropToSquare(file) {
   canvas.width = SIZE
   canvas.height = SIZE
   const ctx = canvas.getContext('2d')
-  ctx.fillStyle = '#f2f2ef' // so a transparent PNG does not turn black
+  ctx.fillStyle = '#f5f5f0' // so a transparent PNG does not turn black
   ctx.fillRect(0, 0, SIZE, SIZE)
   ctx.drawImage(bitmap, (bitmap.width - side) / 2, (bitmap.height - side) / 2, side, side, 0, 0, SIZE, SIZE)
   bitmap.close?.()
@@ -42,7 +42,7 @@ export default function AvatarDrop({ value, initials, onChange, dirty = false })
 
   return (
     <div>
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4">
         <label
           className="avatar-drop"
           data-over={over}
@@ -72,7 +72,7 @@ export default function AvatarDrop({ value, initials, onChange, dirty = false })
           {value ? (
             <img src={value} alt="" className="h-full w-full object-cover" />
           ) : (
-            <span aria-hidden="true" className="font-display text-4xl tracking-[-0.03em]">
+            <span aria-hidden="true" className="font-display text-base tracking-[0.06em]">
               {initials}
             </span>
           )}

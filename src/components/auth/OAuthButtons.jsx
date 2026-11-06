@@ -18,7 +18,7 @@ export default function OAuthButtons({ verb = 'Continue' }) {
         <span className="h-px flex-1 bg-hairline" />
       </div>
 
-      <div className="mt-6 grid gap-3">
+      <div className="mt-4 grid gap-3">
         {PROVIDERS.map((provider) => (
           <button
             key={provider}

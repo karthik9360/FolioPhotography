@@ -29,30 +29,36 @@ export const initialsOf = (name) =>
 function toDisplay(upload) {
   const created = Date.parse(upload.createdAt)
   const meta = upload.mediaMeta ?? []
-  const title = upload.caption.split('\n')[0].slice(0, 60) || 'New photograph'
+  const firstLine = upload.caption.split('\n')[0].slice(0, 60)
   const exif = Object.fromEntries(Object.entries(upload.exifData ?? {}).filter(([, v]) => v))
 
   const photos = upload.mediaUrls.map((url, i) => {
-    const w = meta[i]?.w || 1200
-    const h = meta[i]?.h || 1500
+    const m = meta[i] ?? {}
+    const isVideo = m.type === 'video'
+    const w = m.w || (isVideo ? 1280 : 1200)
+    const h = m.h || (isVideo ? 720 : 1500)
+    const title = firstLine || (isVideo ? 'New video' : 'New photograph')
     return {
       id: `${upload.id}:${i}`,
       userHandle: upload.userHandle,
       title,
-      category: 'New',
+      category: isVideo ? 'Video' : 'New',
       series: 'New',
       ratio: w / h,
       w,
       h,
       fullW: w,
       fullH: h,
-      thumb: url,
-      full: url,
-      alt: `Photograph by ${upload.userHandle}: ${title}`,
+      thumb: isVideo ? m.poster || '' : url,
+      full: isVideo ? m.poster || '' : url,
+      video: isVideo ? url : '', // the playable file, for a video
+      duration: m.duration || 0,
+      playable: m.playable !== false,
+      alt: `${isVideo ? 'Video' : 'Photograph'} by ${upload.userHandle}: ${title}`,
       location: '',
       year: new Date(created).getFullYear(),
       story: upload.caption,
-      exif,
+      exif: isVideo ? {} : exif,
       likes: upload.metrics.likes.length,
       seedComments: upload.metrics.comments,
       fresh: Date.now() - created < 4000, // drives the arrival animation, once
@@ -184,6 +190,13 @@ export function TenantProvider({ children }) {
 
   const seededProfiles = useCallback(() => Object.keys(staticProfiles).map(profileFor), [profileFor])
 
+  /** Every photographer: the seeded demo set plus anyone who registered as a creator. For search. */
+  const photographerProfiles = useCallback(() => {
+    const handles = new Set(Object.keys(staticProfiles))
+    for (const entry of directory) if (entry.role === 'creator') handles.add(entry.handle)
+    return [...handles].map(profileFor).filter(Boolean)
+  }, [directory, profileFor])
+
   const value = useMemo(
     () => ({
       appendPost,
@@ -195,9 +208,10 @@ export function TenantProvider({ children }) {
       photosFor,
       profileFor,
       seededProfiles,
+      photographerProfiles,
       isPrivate,
     }),
-    [appendPost, renameHandle, refreshDirectory, postsAll, photoById, postById, photosFor, profileFor, seededProfiles, isPrivate],
+    [appendPost, renameHandle, refreshDirectory, postsAll, photoById, postById, photosFor, profileFor, seededProfiles, photographerProfiles, isPrivate],
   )
 
   return <TenantContext.Provider value={value}>{children}</TenantContext.Provider>

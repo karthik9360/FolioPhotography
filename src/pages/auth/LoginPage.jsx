@@ -69,9 +69,9 @@ export default function LoginPage() {
       <h1 id="login-title" className="auth-title">
         Sign in
       </h1>
-      <p className="measure mt-4 text-[1.0625rem] text-ink-soft">Welcome back. Pick up where you left off.</p>
+      <p className="measure mt-4 text-xs text-ink-soft">Welcome back. Pick up where you left off.</p>
 
-      <form onSubmit={submit} noValidate className="mt-12">
+      <form onSubmit={submit} noValidate className="mt-5">
         <FloatingField
           label="Email"
           name="email"
@@ -118,11 +118,11 @@ export default function LoginPage() {
         </button>
       </form>
 
-      <div className="mt-10">
+      <div className="mt-4">
         <OAuthButtons verb="Continue" />
       </div>
 
-      <p className="mt-8 text-ink-soft">
+      <p className="mt-4 text-ink-soft">
         New here?{' '}
         <Link to="/auth/register" state={location.state} className="link text-ink">
           Create an account
@@ -130,13 +130,15 @@ export default function LoginPage() {
       </p>
 
       {site.demoAuth && (
-        <details className="caption mt-8 text-ink-soft">
+        <details className="caption mt-4 text-ink-soft">
           <summary className="link w-fit cursor-pointer">Demo accounts</summary>
           <ul className="mt-3 space-y-1">
             {DEMO_ACCOUNTS.map((account) => (
               <li key={account.email} className="flex flex-wrap items-baseline gap-x-3">
                 <span className="data text-ink">{account.email}</span>
-                <span>{account.role}</span>
+                <span>
+                  {account.role} · @{account.username}
+                </span>
                 <button
                   type="button"
                   className="link"

@@ -9,6 +9,8 @@
 //
 // Replace this module with calls to the real API. The functions and error codes are the contract.
 
+import { DEMO_IDENTITIES } from '../config/identities'
+import { users as seededPhotographers } from '../data/users'
 import { b64urlEncode } from './jwt'
 import { normalizeHandle, rules } from './validation'
 
@@ -20,11 +22,9 @@ const RESEND_COOLDOWN_MS = 30 * 1000
 const MAX_OTP_ATTEMPTS = 5
 
 export const DEMO_PASSWORD = 'Demo-pass-2026'
-export const DEMO_ACCOUNTS = [
-  { email: 'photographer@demo.test', role: 'creator' },
-  { email: 'client@demo.test', role: 'client' },
-  { email: 'follower@demo.test', role: 'follower' },
-]
+export const DEMO_ACCOUNTS = DEMO_IDENTITIES.map(({ email, role, username }) => ({ email, role, username }))
+const SEED_KEY = 'folio.mock.seedVersion'
+const SEED_VERSION = '2' // bump to re-seed the demo accounts in browsers that hold an older set
 
 export class AuthError extends Error {
   constructor(code, message, field) {
@@ -48,27 +48,52 @@ const hex = (bytes) => [...bytes].map((b) => b.toString(16).padStart(2, '0')).jo
 const randomHex = (n = 16) => hex(crypto.getRandomValues(new Uint8Array(n)))
 
 async function hashPassword(password, salt) {
-  if (!crypto?.subtle) throw new AuthError('insecure_context', 'Sign-in needs a secure context (https or localhost).')
+  if (!crypto?.subtle) throw new AuthError('insecure_context', 'Signing in needs a secure connection. Please open this site over https.')
   const data = new TextEncoder().encode(`${salt}:${password}`)
   return hex(new Uint8Array(await crypto.subtle.digest('SHA-256', data)))
 }
 
 async function ensureSeed() {
-  if (read(USERS_KEY, null)) return
-  const seeds = [
-    { id: 'u_demo_creator', email: 'photographer@demo.test', name: 'Ona Verne', handle: 'ona-verne', role: 'creator' },
-    { id: 'u_demo_client', email: 'client@demo.test', name: 'Demo Client', handle: 'demo-client', role: 'client' },
-    { id: 'u_demo_follower', email: 'follower@demo.test', name: 'Demo Follower', handle: 'demo-follower', role: 'follower' },
-  ]
-  const users = []
-  for (const seed of seeds) {
+  if (localStorage.getItem(SEED_KEY) === SEED_VERSION && read(USERS_KEY, null)) return
+  // Replace the demo accounts; keep anyone who registered themselves.
+  const kept = read(USERS_KEY, []).filter((u) => !u.id.startsWith('u_demo_'))
+  const demos = []
+  for (const d of DEMO_IDENTITIES) {
     const salt = randomHex()
-    users.push({ ...seed, verified: true, salt, hash: await hashPassword(DEMO_PASSWORD, salt), createdAt: Date.now() })
+    demos.push({
+      id: `u_demo_${d.role}`,
+      email: d.email,
+      name: d.name,
+      handle: d.username,
+      role: d.role,
+      verified: true,
+      salt,
+      hash: await hashPassword(DEMO_PASSWORD, salt),
+      createdAt: Date.now(),
+    })
   }
-  write(USERS_KEY, users)
+  write(USERS_KEY, [...demos, ...kept])
+  localStorage.setItem(SEED_KEY, SEED_VERSION)
+}
+
+/**
+ * DEMO ONLY: a session for one of the three demo accounts without a password, for the role switcher.
+ * A real backend must not have this.
+ */
+export async function loginAsDemo(role) {
+  await wait(150)
+  await ensureSeed()
+  const user = users().find((u) => u.id === `u_demo_${role}`)
+  if (!user) throw new AuthError('not_demo', 'That isn’t a demo account.')
+  return { token: issueToken(user, false) }
 }
 
 const users = () => read(USERS_KEY, [])
+
+// The seeded photographers' handles are always taken, whether or not they have a login.
+const SEEDED_HANDLES = new Set(seededPhotographers.map((u) => u.handle))
+const handleTaken = (handle, exceptId) =>
+  SEEDED_HANDLES.has(handle) || users().some((u) => u.handle === handle && u.id !== exceptId)
 const findByEmail = (email) => users().find((u) => u.email === email.trim().toLowerCase())
 
 function issueToken(user, remember) {
@@ -122,7 +147,7 @@ export async function register({ name, email, password, handle, role }) {
     rules.name(clean.name) || rules.email(clean.email) || rules.password(password) || rules.handle(clean.handle) || rules.role(role)
   if (invalid) throw new AuthError('invalid', invalid)
   if (findByEmail(clean.email)) throw new AuthError('email_taken', 'An account with that email already exists.', 'email')
-  if (users().some((u) => u.handle === clean.handle)) throw new AuthError('handle_taken', 'That handle is taken.', 'handle')
+  if (handleTaken(clean.handle)) throw new AuthError('handle_taken', 'That username is taken.', 'handle')
 
   const salt = randomHex()
   const user = {
@@ -143,7 +168,7 @@ export async function checkHandle(handle) {
   await wait(300)
   await ensureSeed()
   const h = normalizeHandle(handle)
-  return { available: !users().some((u) => u.handle === h) }
+  return { available: !handleTaken(h) }
 }
 
 export async function verifyOtp({ userId, code }) {
@@ -249,8 +274,9 @@ export async function updateProfile({ userId, name, handle, bio, categories, ava
   const invalid = rules.name(name) || rules.handle(cleanHandle)
   if (invalid) throw new AuthError('invalid', invalid)
   if ((bio ?? '').length > 150) throw new AuthError('invalid', 'Keep your bio to 150 characters.', 'bio')
-  if (all.some((u) => u.id !== userId && u.handle === cleanHandle)) {
-    throw new AuthError('handle_taken', 'That handle is taken.', 'handle')
+  // Keeping your own handle is always fine; anyone else's, or a seeded photographer's, is taken.
+  if (cleanHandle !== user.handle && handleTaken(cleanHandle, userId)) {
+    throw new AuthError('handle_taken', 'That username is taken.', 'handle')
   }
 
   const next = {

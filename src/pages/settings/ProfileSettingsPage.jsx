@@ -98,7 +98,7 @@ export default function ProfileSettingsPage() {
         save()
       }}
       noValidate
-      className="grid gap-x-20 gap-y-16 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)]"
+      className="grid gap-x-20 gap-y-6 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)]"
     >
       <div>
         <AvatarDrop
@@ -108,12 +108,12 @@ export default function ProfileSettingsPage() {
           onChange={(url) => set('avatar', url)}
         />
 
-        <div className="mt-6">
+        <div className="mt-4">
           <FloatingField label="Display name" name="name" autoComplete="name" {...textField('name')} />
         </div>
         <div className="mt-2">
           <FloatingField
-            label="Public handle"
+            label="Username"
             name="username"
             autoComplete="username"
             autoCapitalize="none"
@@ -135,7 +135,7 @@ export default function ProfileSettingsPage() {
             {...textField('bio')}
           />
         </div>
-        <div className="mt-6">
+        <div className="mt-4">
           <CategoryTags
             value={values.categories}
             dirty={dirty.categories}
@@ -148,7 +148,7 @@ export default function ProfileSettingsPage() {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary btn-auth mt-10" disabled={!isDirty || saving} aria-busy={saving}>
+        <button type="submit" className="btn btn-primary btn-auth mt-4" disabled={!isDirty || saving} aria-busy={saving}>
           {saving ? 'Saving' : 'Save profile'}
         </button>
         <p className="mt-4 min-h-6">

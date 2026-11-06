@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 
 export const TABS = [
-  { id: 'grid', label: 'Grid' },
+  { id: 'grid', label: 'Lookbook' },
   { id: 'series', label: 'Series' },
   { id: 'tagged', label: 'Tagged' },
 ]
@@ -29,7 +29,7 @@ export default function ProfileTabs({ value, onChange }) {
     <div
       role="tablist"
       aria-label="Profile sections"
-      className="label border-b border-hairline"
+      className="label"
       onKeyDown={onKeyDown}
     >
       {TABS.map((tab) => (

@@ -1,5 +1,8 @@
-import { Bookmark, Heart, MessageCircle, Send } from 'lucide-react'
-
+/**
+ * The post's actions, set as type rather than an icon row: Like, Comment, Share, and Save. A pressed
+ * action keeps its underline. The accessible names are unchanged ("Like", "Comment", "Share post",
+ * "Save to mood board"), and each contains its visible word.
+ */
 export default function PostActions({
   liked,
   saved,
@@ -12,38 +15,30 @@ export default function PostActions({
   onShare,
 }) {
   return (
-    <div className="flex items-center">
-      <div className="-ml-2.5 flex items-center">
-        <button type="button" className="toggle-icon icon-btn" aria-pressed={liked} aria-label="Like" onClick={onLike}>
-          <Heart size={24} strokeWidth={1.25} aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          className="icon-btn"
-          aria-expanded={commentsOpen}
-          aria-controls={commentsId}
-          aria-label="Comment"
-          onClick={onComment}
-        >
-          <MessageCircle size={24} strokeWidth={1.25} aria-hidden="true" />
-        </button>
-        <button type="button" className="icon-btn" aria-label="Copy link to post" onClick={onShare}>
-          <Send size={24} strokeWidth={1.25} aria-hidden="true" />
-        </button>
-      </div>
+    <div className="label flex flex-wrap items-center gap-x-8 gap-y-1">
+      <button type="button" className="nav-link" aria-pressed={liked} aria-label="Like" onClick={onLike}>
+        Like
+      </button>
+      <button
+        type="button"
+        className="nav-link"
+        aria-expanded={commentsOpen}
+        aria-controls={commentsId}
+        aria-label="Comment"
+        onClick={onComment}
+      >
+        Comment
+      </button>
+      <button type="button" className="nav-link" aria-label="Share post" onClick={onShare}>
+        Share
+      </button>
 
-      <p className="caption ml-2 text-ink-soft" aria-live="polite">
+      <p className="caption normal-case tracking-normal text-ink-soft" aria-live="polite">
         {status}
       </p>
 
-      <button
-        type="button"
-        className="toggle-icon icon-btn -mr-2.5 ml-auto"
-        aria-pressed={saved}
-        aria-label="Save to mood board"
-        onClick={onSave}
-      >
-        <Bookmark size={24} strokeWidth={1.25} aria-hidden="true" />
+      <button type="button" className="nav-link ml-auto" aria-pressed={saved} aria-label="Save to mood board" onClick={onSave}>
+        Save
       </button>
     </div>
   )

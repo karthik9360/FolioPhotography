@@ -7,7 +7,7 @@ import { site } from '../../config/site'
 
 const STEPS = [
   { title: 'Create your account', lead: 'Start with the basics.', fields: ['name', 'email', 'password'] },
-  { title: 'Choose your handle', lead: 'It’s how people find and tag you.', fields: ['handle'] },
+  { title: 'Choose a username', lead: 'It’s how people find and tag you.', fields: ['handle'] },
   { title: 'Choose your role', lead: `How you’ll use ${site.name}. It sets where you land after signing in.`, fields: ['role'] },
 ]
 
@@ -162,9 +162,9 @@ export default function RegisterPage() {
       <h1 id="register-title" ref={headingRef} tabIndex={-1} className="auth-title">
         {current.title}
       </h1>
-      <p className="measure mt-4 text-[1.0625rem] text-ink-soft">{current.lead}</p>
+      <p className="measure mt-4 text-xs text-ink-soft">{current.lead}</p>
 
-      <div className="mt-8 flex items-center gap-6">
+      <div className="mt-4 flex items-center gap-4">
         <div className="flex flex-1 gap-2" role="img" aria-label={`Step ${step + 1} of ${STEPS.length}`}>
           {STEPS.map((s, i) => (
             <span
@@ -179,7 +179,7 @@ export default function RegisterPage() {
         </p>
       </div>
 
-      <form onSubmit={onSubmit} noValidate className="mt-8">
+      <form onSubmit={onSubmit} noValidate className="mt-4">
         <div key={step} className="step-in" style={{ '--dir': dir }}>
           {step === 0 && (
             <>
@@ -228,7 +228,7 @@ export default function RegisterPage() {
 
           {step === 1 && (
             <FloatingField
-              label="Handle"
+              label="Username"
               name="username"
               autoComplete="username"
               autoCapitalize="none"
@@ -265,7 +265,7 @@ export default function RegisterPage() {
                       }}
                     />
                     <span>
-                      <span className="block text-[1.0625rem] font-medium">{role.name}</span>
+                      <span className="block text-xs font-medium">{role.name}</span>
                       <span className="caption text-ink-soft">{role.note}</span>
                     </span>
                   </label>
@@ -286,7 +286,7 @@ export default function RegisterPage() {
           {step < STEPS.length - 1 ? 'Continue' : busy ? 'Creating account' : 'Create account'}
         </button>
 
-        <div className="mt-6 flex items-center justify-between gap-6">
+        <div className="mt-4 flex items-center justify-between gap-4">
           {step > 0 ? (
             <button type="button" className="link" onClick={() => goTo(step - 1)}>
               Back

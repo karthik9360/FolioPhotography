@@ -4,7 +4,7 @@ import { useId } from 'react'
 export default function Switch({ checked, onChange, label, description, dirty = false }) {
   const id = useId()
   return (
-    <div className="flex items-start justify-between gap-6 py-5" data-dirty={dirty}>
+    <div className="flex items-start justify-between gap-4 py-5" data-dirty={dirty}>
       <div>
         <p id={`${id}-label`} className="font-medium">
           {label}

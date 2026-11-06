@@ -14,7 +14,7 @@ export default function PostPage() {
   if (!post) return <NotFoundPage />
 
   return (
-    <main id="main" className="wrap pt-8 md:pt-14">
+    <main id="main" className="wrap pt-4 md:pt-5">
       <h1 className="sr-only">Post</h1>
       <div className="mx-auto max-w-[540px]">
         <PostCard post={post} actions={actions} />

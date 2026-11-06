@@ -70,15 +70,33 @@ export default function PostMedia({ ratio, photos, label, onDoubleTap }) {
               aria-roledescription="slide"
               aria-label={`${i + 1} of ${count}`}
             >
-              <img
-                src={photo.thumb}
-                alt={photo.alt}
-                width={photo.w}
-                height={photo.h}
-                loading={i === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-                draggable={false}
-              />
+              {photo.video ? (
+                photo.playable ? (
+                  <video
+                    src={photo.video}
+                    poster={photo.thumb || undefined}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    aria-label={photo.alt}
+                    className="h-full w-full bg-[#0a0a0a] object-contain"
+                  />
+                ) : (
+                  <p className="caption grid h-full place-items-center p-4 text-center text-ink-soft">
+                    This video can’t be played in your browser.
+                  </p>
+                )
+              ) : (
+                <img
+                  src={photo.thumb}
+                  alt={photo.alt}
+                  width={photo.w}
+                  height={photo.h}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  draggable={false}
+                />
+              )}
             </div>
           ))}
         </div>

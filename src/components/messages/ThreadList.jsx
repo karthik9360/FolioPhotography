@@ -11,7 +11,7 @@ export default function ThreadList({ threads }) {
   const now = useNow()
 
   if (threads.length === 0) {
-    return <p className="py-6 text-ink-soft">No conversations yet. Message a photographer from their profile.</p>
+    return <p className="py-4 text-ink-soft">No conversations yet. Message a photographer from their profile.</p>
   }
 
   return (
@@ -22,7 +22,7 @@ export default function ThreadList({ threads }) {
           const last = thread.messages.at(-1)
           const online = isOnline(thread.with)
           const preview = last
-            ? `${last.from === 'me' ? 'You: ' : ''}${last.text || 'Photographs'}`
+            ? `${last.from === 'me' ? 'You: ' : ''}${last.text || (last.sharedPost ? 'Shared a post' : 'Photographs')}`
             : 'Say hello'
           return (
             <li key={thread.id}>

@@ -9,7 +9,7 @@ import { useViewer } from '../../context/ViewerContext'
 import { useBooking } from '../../context/BookingContext'
 import { site } from '../../config/site'
 
-/** Full-screen lightbox: the photograph on the left, story + EXIF + social on the right. */
+/** Full-screen viewer: the photo or video on the left, its story, camera info and comments on the right. */
 export default function PhotoViewer() {
   const { openId, list, close, step } = useViewer()
   const { openBooking } = useBooking()
@@ -57,15 +57,31 @@ export default function PhotoViewer() {
 
         {photo && (
           <div className="grid min-h-full lg:grid-cols-[minmax(0,1fr)_minmax(340px,420px)]">
-            <div className="relative flex items-center justify-center px-4 pb-6 pt-20 lg:sticky lg:top-0 lg:h-svh lg:p-12">
-              <img
-                key={photo.id}
-                src={photo.full}
-                alt={photo.alt}
-                width={photo.fullW}
-                height={photo.fullH}
-                className="h-auto max-h-[72svh] w-auto max-w-full object-contain lg:max-h-[calc(100svh-6rem)]"
-              />
+            <div className="relative flex items-center justify-center px-4 pb-4 pt-6 lg:sticky lg:top-0 lg:h-svh lg:p-12">
+              {photo.video ? (
+                photo.playable ? (
+                  <video
+                    key={photo.id}
+                    src={photo.video}
+                    poster={photo.full || undefined}
+                    controls
+                    playsInline
+                    aria-label={photo.alt}
+                    className="h-auto max-h-[72svh] w-auto max-w-full object-contain lg:max-h-[calc(100svh-6rem)]"
+                  />
+                ) : (
+                  <p className="caption text-darkroom-dim">This video can’t be played in your browser.</p>
+                )
+              ) : (
+                <img
+                  key={photo.id}
+                  src={photo.full}
+                  alt={photo.alt}
+                  width={photo.fullW}
+                  height={photo.fullH}
+                  className="h-auto max-h-[72svh] w-auto max-w-full object-contain lg:max-h-[calc(100svh-6rem)]"
+                />
+              )}
               {list.length > 1 && (
                 <>
                   <button
@@ -88,11 +104,11 @@ export default function PhotoViewer() {
               )}
             </div>
 
-            <aside className="border-t border-white/15 px-5 py-8 lg:border-l lg:border-t-0 lg:px-10 lg:py-14">
+            <aside className="border-t border-white/15 px-5 py-4 lg:border-l lg:border-t-0 lg:px-10 lg:py-5">
               <p className="data text-darkroom-dim">
                 {position} of {list.length}
               </p>
-              <h2 className="headline mt-6">{photo.title}</h2>
+              <h2 className="headline mt-4">{photo.title}</h2>
               <p className="caption mt-3 text-darkroom-dim">
                 {photo.location}, {photo.year} · {photo.series}
               </p>
@@ -101,9 +117,9 @@ export default function PhotoViewer() {
                 by {profileFor(photo.userHandle)?.name ?? photo.userHandle} (@{photo.userHandle})
               </p>
 
-              <p className="measure mt-8 whitespace-pre-line text-[1.0625rem] leading-relaxed">{photo.story}</p>
+              <p className="measure mt-4 whitespace-pre-line text-xs leading-relaxed">{photo.story}</p>
 
-              <dl className="mt-10 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-white/15 pt-8">
+              <dl className="mt-4 grid grid-cols-2 gap-x-8 gap-y-5 border-t border-white/15 pt-4">
                 {Object.entries(photo.exif).map(([key, value]) => (
                   <div key={key}>
                     <dt className="label text-darkroom-dim">{key}</dt>
@@ -112,7 +128,7 @@ export default function PhotoViewer() {
                 ))}
               </dl>
 
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 border-t border-white/15 pt-4">
+              <div className="mt-4 flex flex-wrap items-center gap-x-6 border-t border-white/15 pt-4">
                 <LikeButton photo={photo} />
                 <SaveButton photo={photo} />
               </div>
@@ -121,13 +137,13 @@ export default function PhotoViewer() {
                 <CommentPanel key={photo.id} photo={photo} />
               </div>
 
-              <div className="mt-10">
+              <div className="mt-4">
                 <button type="button" className="btn btn-quiet" onClick={openBooking}>
                   Book a shoot
                 </button>
               </div>
 
-              <p className="caption mt-10 text-darkroom-dim">{site.demoNotice}</p>
+              <p className="caption mt-4 text-darkroom-dim">{site.demoNotice}</p>
             </aside>
           </div>
         )}

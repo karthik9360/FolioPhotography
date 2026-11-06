@@ -50,7 +50,7 @@ export default function ChatView({ threadId }) {
         </Link>
       </header>
 
-      <ol ref={listRef} role="log" aria-label="Messages" className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto py-6">
+      <ol ref={listRef} role="log" aria-label="Messages" className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto py-4">
         {messages.length === 0 && <li className="text-ink-soft">Say hello to {partner.name}.</li>}
         {messages.map((message, i) => (
           <MessageBubble key={message.id} message={message} own={message.from === 'me'} index={i} showStatus={i === lastOwn} />

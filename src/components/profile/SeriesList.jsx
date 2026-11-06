@@ -7,7 +7,7 @@ export default function SeriesList({ series }) {
   const { photoById } = useUserTenant()
 
   if (series.length === 0) {
-    return <p className="py-16 text-ink-soft">No series yet.</p>
+    return <p className="py-6 text-ink-soft">No series yet.</p>
   }
 
   return (
@@ -18,7 +18,7 @@ export default function SeriesList({ series }) {
         return (
           <li
             key={s.id}
-            className="grid gap-6 border-b border-hairline py-10 md:grid-cols-12 md:gap-x-5 md:py-14"
+            className="grid gap-4 py-5 md:grid-cols-12 md:gap-x-5 md:py-6"
           >
             <div className="md:col-span-4">
               <button
@@ -40,7 +40,7 @@ export default function SeriesList({ series }) {
               <h3 className="headline">{s.title}</h3>
               <p className="measure mt-4 text-ink-soft">{s.note}</p>
               <p className="caption mt-4 text-ink-soft">{s.photoIds.length} photographs</p>
-              <div className="mt-8">
+              <div className="mt-4">
                 <button type="button" className="btn btn-quiet" onClick={open}>
                   View series
                 </button>

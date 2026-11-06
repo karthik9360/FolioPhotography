@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { models } from '../data/models'
 import { persistReaction } from '../lib/mockFeedApi'
 import { useAuth } from '../context/AuthContext'
 import { useSocial } from '../context/SocialContext'
@@ -57,8 +58,9 @@ export function useSocialFeed(scope = 'for-you') {
   const timer = useRef(0)
 
   // A private account's posts reach only its owner and its followers.
+  // 3D nodes (`type: '3d'`) join the same stream, newest first.
   const source = useMemo(() => {
-    const visible = postsAll.filter(
+    const visible = [...postsAll, ...models].sort((a, b) => b.createdAt - a.createdAt).filter(
       (p) => !isPrivate(p.userHandle) || p.userHandle === me?.handle || isFollowing(p.userHandle),
     )
     return scope === 'following' ? visible.filter((p) => isFollowing(p.userHandle)) : visible
@@ -90,6 +92,7 @@ export function useSocialFeed(scope = 'for-you') {
 
   return {
     posts: source.slice(0, count),
+    all: source, // every post in scope, for layouts that arrange the whole list and reveal it page by page
     loading,
     hasMore: count < source.length,
     loadMore,

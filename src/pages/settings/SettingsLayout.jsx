@@ -6,10 +6,10 @@ const ORDER = ['/settings/account', '/settings/profile']
 /** The settings hub: two editors, Account (sensitive) and Profile (public), that slide and fade between each other. */
 export default function SettingsLayout() {
   return (
-    <main id="main" className="wrap pb-10 pt-12 md:pt-20">
+    <main id="main" className="wrap pb-4 pt-5 md:pt-6">
       <h1 className="display">Settings</h1>
 
-      <nav aria-label="Settings sections" className="label mt-10 border-b border-hairline">
+      <nav aria-label="Settings sections" className="label mt-4 border-b border-hairline">
         <NavLink to="/settings/account" className="tab">
           Account
         </NavLink>
@@ -18,7 +18,7 @@ export default function SettingsLayout() {
         </NavLink>
       </nav>
 
-      <CrossfadeOutlet className="settings-stage mt-10 md:mt-14" layerClass="settings-layer" order={ORDER} />
+      <CrossfadeOutlet className="settings-stage mt-4 md:mt-5" layerClass="settings-layer" order={ORDER} />
     </main>
   )
 }

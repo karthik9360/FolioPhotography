@@ -1,6 +1,16 @@
 // Synthetic demonstration photographers. None of these are real people.
 export const users = [
   {
+    handle: 'studio_karthik',
+    name: 'Studio Karthik',
+    initials: 'SK',
+    location: 'Chennai',
+    specialty: 'Editorial',
+    bio: 'Editorial and campaign photography from Chennai. Natural light, long lenses, quiet sets.',
+    followers: 21400,
+    following: 188,
+  },
+  {
     handle: 'ona-verne',
     name: 'Ona Verne',
     initials: 'OV',

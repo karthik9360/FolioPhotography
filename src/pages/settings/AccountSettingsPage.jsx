@@ -63,13 +63,13 @@ export default function AccountSettingsPage() {
     >
       <h2 className="headline">Email</h2>
       <p className="mt-2 text-ink-soft">The address you sign in with.</p>
-      <div className="mt-6">
+      <div className="mt-4">
         <FloatingField label="Email address" name="email" type="email" autoComplete="email" {...field('email')} />
       </div>
 
-      <h2 className="headline mt-16">Password</h2>
+      <h2 className="headline mt-6">Password</h2>
       <p className="mt-2 text-ink-soft">Your current password is needed to change your email or your password.</p>
-      <div className="mt-6">
+      <div className="mt-4">
         <FloatingField
           label="Current password"
           name="current-password"
@@ -98,7 +98,7 @@ export default function AccountSettingsPage() {
         </div>
       </div>
 
-      <h2 className="headline mt-16">Visibility</h2>
+      <h2 className="headline mt-6">Visibility</h2>
       <div className="mt-2 border-y border-hairline">
         <Switch
           checked={values.isPrivate}
@@ -109,7 +109,7 @@ export default function AccountSettingsPage() {
         />
       </div>
 
-      <button type="submit" className="btn btn-primary btn-auth mt-12" disabled={!isDirty || saving} aria-busy={saving}>
+      <button type="submit" className="btn btn-primary btn-auth mt-5" disabled={!isDirty || saving} aria-busy={saving}>
         {saving ? 'Saving' : 'Save changes'}
       </button>
       <p className="mt-4 min-h-6">

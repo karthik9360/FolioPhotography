@@ -20,7 +20,7 @@ export default function PostHeader({ author, location, isSelf }) {
       {!isSelf && (
         <button
           type="button"
-          className={`nav-link label ml-auto${following ? '' : ' !text-signal'}`}
+          className="nav-link label ml-auto"
           aria-label={`${following ? 'Unfollow' : 'Follow'} ${author.handle}`}
           onClick={() => toggleFollow(author.handle)}
         >

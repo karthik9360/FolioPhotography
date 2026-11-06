@@ -37,14 +37,14 @@ export default function MessagesPage() {
 
       <div className="grid h-full min-h-0 lg:grid-cols-[22rem_minmax(0,1fr)] lg:gap-x-14">
         <div className={`min-h-0 overflow-y-auto ${threadId ? 'hidden lg:block' : ''}`}>
-          <p className="label py-4 font-sans text-ink-soft">Messages</p>
+          <p className="label py-4 text-ink-soft">Messages</p>
           <ThreadList threads={threads} />
         </div>
 
         <div className={`min-h-0 ${threadId ? '' : 'hidden lg:block'}`}>
           {thread && <ChatView key={thread.id} threadId={thread.id} />}
           {missing && (
-            <div className="py-16">
+            <div className="py-6">
               <h2 className="headline">Conversation not found.</h2>
               <p className="measure mt-4 text-ink-soft">
                 It may have been removed. <Link to="/messages" className="link text-ink">Back to messages</Link>
@@ -52,7 +52,7 @@ export default function MessagesPage() {
             </div>
           )}
           {!threadId && (
-            <div className="py-16">
+            <div className="py-6">
               <h2 className="headline">Select a conversation.</h2>
               <p className="measure mt-4 text-ink-soft">Choose one from the list to read it and reply.</p>
             </div>

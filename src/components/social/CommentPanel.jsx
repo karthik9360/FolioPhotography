@@ -45,12 +45,12 @@ export default function CommentPanel({ photo }) {
             {comments.map((c) => (
               <li key={c.id}>
                 <p className="label text-darkroom-dim">{c.author}</p>
-                <p className="mt-1 text-[0.9375rem] leading-snug">{c.text}</p>
+                <p className="mt-1 text-xs leading-snug">{c.text}</p>
               </li>
             ))}
           </ul>
 
-          <form onSubmit={submit} className="mt-6 flex items-end gap-4">
+          <form onSubmit={submit} className="mt-4 flex items-end gap-4">
             <div className="flex-1">
               <label htmlFor={`${regionId}-draft`} className="caption text-darkroom-dim">
                 Add a comment

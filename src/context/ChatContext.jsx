@@ -55,13 +55,14 @@ export function ChatProvider({ children }) {
   }, [])
 
   const send = useCallback(
-    (threadId, { text = '', attachments = [] }) => {
+    (threadId, { text = '', attachments = [], sharedPost = null }) => {
       const body = text.trim()
       const thread = threadsRef.current[threadId]
-      if (!thread || (!body && attachments.length === 0)) return
+      if (!thread || (!body && attachments.length === 0 && !sharedPost)) return
 
       // Optimistic: it is in the conversation, marked Sent, before anything else happens.
-      const message = { id: crypto.randomUUID(), from: 'me', text: body, createdAt: Date.now(), status: 'sent', attachments }
+      // `sharedPost` is a small snapshot of a feed post: { id, handle, caption, thumb, count }.
+      const message = { id: crypto.randomUUID(), from: 'me', text: body, createdAt: Date.now(), status: 'sent', attachments, sharedPost }
       setThreads((t) => ({ ...t, [threadId]: { ...t[threadId], messages: [...t[threadId].messages, message] } }))
 
       later(() => patchMessage(threadId, message.id, { status: 'delivered' }), 700)
@@ -125,6 +126,8 @@ export function useChat(threadId) {
     messages: thread?.messages ?? [],
     isTyping: Boolean(threadId && ctx.typing[threadId]),
     send: (payload) => ctx.send(threadId, payload),
+    /** Send a feed post into any conversation, by thread id. */
+    shareToThread: (id, sharedPost) => ctx.send(id, { sharedPost }),
     markRead: () => ctx.markRead(threadId),
     startThread: ctx.startThread,
   }

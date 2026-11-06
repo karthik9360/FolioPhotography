@@ -3,10 +3,10 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useNudge } from '../../hooks/useNudge'
 
 /**
- * Floating-label field: no box, a hairline underline, and a signal line that draws in on focus.
+ * Floating-label field: no box, a hairline underline, and a charcoal line that draws in on focus.
  * The message line below always reserves its height, so errors never shift the layout.
  *  - `nudge`: increment on a failed attempt to play the 4px nudge.
- *  - `dirty`: the value differs from what is saved; the baseline turns signal blue.
+ *  - `dirty`: the value differs from what is saved; the baseline turns olive.
  *  - `multiline`: a textarea (bio, caption). `counter={{ max }}` shows "length/max".
  */
 export default function FloatingField({

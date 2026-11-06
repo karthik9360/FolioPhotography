@@ -40,14 +40,14 @@ export const rules = {
 
   handle: (v) => {
     const h = normalizeHandle(v)
-    if (!h) return 'Choose a handle.'
-    if (h.length < 3) return 'Handles need at least 3 characters.'
-    if (h.length > 24) return 'Handles can be at most 24 characters.'
+    if (!h) return 'Choose a username.'
+    if (h.length < 3) return 'Usernames need at least 3 characters.'
+    if (h.length > 24) return 'Usernames can be at most 24 characters.'
     if (!/^[a-z0-9][a-z0-9._-]*[a-z0-9]$/.test(h)) {
       return 'Use letters, numbers, dots, hyphens and underscores. Start and end with a letter or number.'
     }
     if (/[._-]{2}/.test(h)) return 'No two dots, hyphens or underscores in a row.'
-    if (RESERVED_HANDLES.has(h)) return 'That handle is reserved. Try another.'
+    if (RESERVED_HANDLES.has(h)) return 'That username can’t be used. Try another.'
     return ''
   },
 

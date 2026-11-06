@@ -3,6 +3,7 @@ import PostActions from './PostActions'
 import PostBody from './PostBody'
 import PostHeader from './PostHeader'
 import PostMedia from './PostMedia'
+import SharePanel from './SharePanel'
 import { useAuth } from '../../context/AuthContext'
 import { useSocial } from '../../context/SocialContext'
 import { useUserTenant } from '../../context/TenantContext'
@@ -19,29 +20,25 @@ export default function PostCard({ post, actions, index = 0 }) {
   const now = useNow()
   const regionId = useId()
   const [open, setOpen] = useState(false)
-  const [status, setStatus] = useState('')
+  // The share panel mounts the first time it is opened, so a long feed does not carry a dialog per post.
+  const [shareOpen, setShareOpen] = useState(false)
+  const [shareMounted, setShareMounted] = useState(false)
 
   const { profileFor, photoById } = useUserTenant()
   const author = profileFor(post.userHandle) ?? { handle: post.userHandle, name: post.userHandle, initials: '?' }
   const photos = post.photoIds.map(photoById)
   const comments = commentsFor(post.id)
 
-  async function share() {
-    const url = `${window.location.origin}/post/${post.id}`
-    try {
-      await navigator.clipboard.writeText(url)
-      setStatus('Link copied')
-    } catch {
-      setStatus('Couldn’t copy the link')
-    }
-    setTimeout(() => setStatus(''), 2400)
+  function openShare() {
+    setShareMounted(true)
+    setShareOpen(true)
   }
 
   return (
     <article
       id={post.id}
       aria-label={`Post by ${author.handle}`}
-      className="rise mb-12 border-b border-hairline pb-12 last:mb-0 last:border-0"
+      className="rise mb-5 pb-5 last:mb-0"
       style={{ '--i': index % 4 }}
     >
       <PostHeader author={author} location={post.location} isSelf={me?.handle === author.handle} />
@@ -61,11 +58,10 @@ export default function PostCard({ post, actions, index = 0 }) {
           saved={isSaved(post.id)}
           commentsOpen={open}
           commentsId={regionId}
-          status={status}
           onLike={() => actions.toggleLike(post.id)}
           onSave={() => actions.toggleSave(post.id)}
           onComment={() => setOpen((v) => !v)}
-          onShare={share}
+          onShare={openShare}
         />
       </div>
 
@@ -80,6 +76,17 @@ export default function PostCard({ post, actions, index = 0 }) {
         onToggleComments={() => setOpen((v) => !v)}
         onAddComment={(text) => addComment(post.id, text)}
       />
+
+      {shareMounted && (
+        <SharePanel
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          post={post}
+          author={author}
+          cover={photos[0]}
+          count={photos.length}
+        />
+      )}
     </article>
   )
 }

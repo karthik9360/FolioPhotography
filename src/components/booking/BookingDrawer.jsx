@@ -67,8 +67,8 @@ export default function BookingDrawer() {
   return (
     <Sheet open={open} onClose={close} label="Book a shoot">
       <div className="drawer-panel">
-        <div className="px-6 py-8 md:px-10 md:py-12">
-          <div className="flex items-start justify-between gap-6">
+        <div className="px-6 py-4 md:px-10 md:py-5">
+          <div className="flex items-start justify-between gap-4">
             <h2 className="headline">{sent ? 'Enquiry noted' : 'Book a shoot'}</h2>
             <button
               type="button"
@@ -81,30 +81,30 @@ export default function BookingDrawer() {
           </div>
 
           {sent ? (
-            <div className="mt-8">
+            <div className="mt-4">
               <p className="measure">
                 Thanks, {form.name.trim()}. This is a demonstration: nothing was sent, because no
                 backend is connected yet.
               </p>
-              <dl className="mt-8 border-t border-hairline">
+              <dl className="mt-4 border-t border-hairline">
                 {[
                   ['Shoot', tierName],
                   ['Date', dateLabel],
                   ['Budget', `${formatMoney(form.budget[0])} to ${formatMoney(form.budget[1])}`],
                   ['Reply to', form.email],
                 ].map(([k, v]) => (
-                  <div key={k} className="flex justify-between gap-6 border-b border-hairline py-4">
+                  <div key={k} className="flex justify-between gap-4 border-b border-hairline py-4">
                     <dt className="caption text-ink-soft">{k}</dt>
                     <dd className="text-right font-medium">{v}</dd>
                   </div>
                 ))}
               </dl>
-              <button type="button" className="btn btn-primary mt-10" onClick={close}>
+              <button type="button" className="btn btn-primary mt-4" onClick={close}>
                 Close
               </button>
             </div>
           ) : (
-            <form onSubmit={submit} noValidate className="mt-6 space-y-8">
+            <form onSubmit={submit} noValidate className="mt-4 space-y-4">
               <p className="caption measure text-ink-soft">
                 Tell us what you have in mind. This demo form does not send anything yet.
               </p>

@@ -75,12 +75,12 @@ export default function VerifyPage() {
       <h1 id="verify-title" className="auth-title">
         Enter your code
       </h1>
-      <p className="measure mt-4 text-[1.0625rem] text-ink-soft">
+      <p className="measure mt-4 text-xs text-ink-soft">
         {site.demoAuth ? 'Enter the 6-digit code for ' : 'We sent a 6-digit code to '}
         <span className="text-ink">{maskEmail(pending.email)}</span>.
       </p>
 
-      <div className="mt-12">
+      <div className="mt-5">
         <OtpInput
           digits={digits}
           onChange={setDigits}
@@ -97,12 +97,12 @@ export default function VerifyPage() {
       </div>
 
       {demoCode && (
-        <p className="caption mt-6 border-t border-hairline pt-4 text-ink-soft">
+        <p className="caption mt-4 border-t border-hairline pt-4 text-ink-soft">
           Demo mode: nothing is emailed. Your code is <span className="data text-ink">{spaced}</span>.
         </p>
       )}
 
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
         <button
           type="button"
           className="link disabled:no-underline"
