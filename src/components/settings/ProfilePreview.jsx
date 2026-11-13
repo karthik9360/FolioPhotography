@@ -17,13 +17,13 @@ export default function ProfilePreview({ name, handle, bio, categories, avatar, 
         ) : (
           <span
             aria-hidden="true"
-            className="grid size-[72px] flex-none place-items-center bg-ink font-display text-base tracking-[0.06em] text-paper"
+            className="rounded-tile grid size-[72px] flex-none place-items-center bg-signal font-display text-xl text-on-accent"
           >
             {initials}
           </span>
         )}
         <div className="min-w-0">
-          <p className="truncate font-display text-base leading-tight tracking-[0.01em]">{name || 'Your name'}</p>
+          <p className="truncate font-display text-xl leading-tight">{name || 'Your name'}</p>
           <p className="caption truncate text-ink-soft">@{handle || 'username'}</p>
         </div>
       </div>

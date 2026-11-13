@@ -1,24 +1,25 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 /*
- * useStudioTheme: the twin-token theme. "light" is the warm linen look (bone-white base, charcoal text,
- * gold and olive accents) and is the default; "dark" is Studio Dark (onyx, bone, taupe). The theme is one attribute on <html>
- * (data-theme); every colour in the interface is a CSS variable that the attribute swaps, so a switch
- * repaints in place with no layout change. index.html sets the attribute before first paint, so the
- * page never opens in the wrong theme.
+ * useStudioTheme: the mood of the whole site. There are two, "teal" (the default) and "blue". The mood
+ * is one attribute on <html> (data-theme); the page's gradient, its panels and its depth are CSS
+ * variables that the attribute swaps, and the browser animates the change over 1.5s (see the
+ * @property rules in index.css). index.html sets the attribute before first paint, so the page never
+ * opens in the wrong mood. The home hero listens to the same value and plays its own transition.
  */
 
-export const THEMES = ['dark', 'light']
+export const THEMES = ['teal', 'blue']
+export const THEME_LABELS = { teal: 'Teal', blue: 'Blue' }
 const STORAGE_KEY = 'folio.theme'
-const CHROME = { dark: '#0A0A0A', light: '#F5F5F0' } // browser UI colour on phones
+const CHROME = { teal: '#011411', blue: '#010c14' } // browser UI colour on phones
 
 const StudioThemeContext = createContext(null)
 
 function readTheme() {
   try {
-    return localStorage.getItem(STORAGE_KEY) === 'dark' ? 'dark' : 'light'
+    return localStorage.getItem(STORAGE_KEY) === 'blue' ? 'blue' : 'teal'
   } catch {
-    return 'light'
+    return 'teal'
   }
 }
 
@@ -31,7 +32,7 @@ export function StudioThemeProvider({ children }) {
   }, [theme])
 
   const setTheme = useCallback((next) => {
-    const value = next === 'dark' ? 'dark' : 'light'
+    const value = next === 'blue' ? 'blue' : 'teal'
     setThemeState(value)
     try {
       localStorage.setItem(STORAGE_KEY, value)
@@ -40,7 +41,7 @@ export function StudioThemeProvider({ children }) {
     }
   }, [])
 
-  const toggleTheme = useCallback(() => setTheme(theme === 'light' ? 'dark' : 'light'), [theme, setTheme])
+  const toggleTheme = useCallback(() => setTheme(theme === 'teal' ? 'blue' : 'teal'), [theme, setTheme])
 
   const value = useMemo(() => ({ theme, setTheme, toggleTheme }), [theme, setTheme, toggleTheme])
   return <StudioThemeContext.Provider value={value}>{children}</StudioThemeContext.Provider>

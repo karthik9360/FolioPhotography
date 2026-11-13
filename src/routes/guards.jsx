@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { roleHome, useAuth } from '../context/AuthContext'
 import { useCreativeHub } from '../context/CreativeHubContext'
 import { useLeaving } from '../components/ui/CrossfadeOutlet'
+import HomePage from '../pages/HomePage'
 
 /*
  * Route guards. These shape the UI only; the server must enforce access to real data.
@@ -42,11 +43,15 @@ export function RequireAuth({ roles }) {
   return <Outlet />
 }
 
-/** "/" goes to the role's home: the studio, the review board, or the feed. Visitors get the feed. */
+/** "/" goes to the role's home: the studio, the review board, or the feed. Visitors get the home page. */
 export function RoleIndex() {
   const { status, user } = useAuth()
-  if (useLeaving()) return null
-  return <Navigate to={status === 'authenticated' ? roleHome[user.role] : '/feed'} replace />
+  const leaving = useLeaving()
+  if (status === 'authenticated') {
+    // A signed-in view that is fading out only shows nothing; it never navigates.
+    return leaving ? null : <Navigate to={roleHome[user.role]} replace />
+  }
+  return <HomePage />
 }
 
 /** Public pages that some roles are routed away from (clients never see the public feed). */

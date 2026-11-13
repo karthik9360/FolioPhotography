@@ -160,7 +160,7 @@ export default function LookbookCell({
       </div>
 
       <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1">
-        <h2 className="font-display text-sm leading-tight tracking-[0.01em]">{photo.title}</h2>
+        <h2 className="font-display text-lg leading-tight">{photo.title}</h2>
         <span className="data text-ink-soft">{projectCode(photo)}</span>
         <p className="label col-span-2 text-ink-soft">
           {[photo.category, photo.series, frames > 1 ? `${frames} frames` : '', showOwner ? `@${photo.userHandle}` : '', status]

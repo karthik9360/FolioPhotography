@@ -1,10 +1,11 @@
-import { useStudioTheme } from '../../context/StudioThemeContext'
+import { THEME_LABELS, useStudioTheme } from '../../context/StudioThemeContext'
 
-const LABELS = { light: 'Light', dark: 'Dark' }
+const SWATCH = { teal: '#0b8a78', blue: '#0b4f8a' }
 
 /**
- * Switches between the light and dark looks. `variant="inline"` is a single text button for the
- * header; `variant="pair"` lists both options for the footer (the current one is marked pressed).
+ * Switches between the Teal and Blue looks. `variant="inline"` is a small round swatch for the header
+ * that shows the look you would switch to; `variant="pair"` lists both options for the footer (the
+ * current one is marked pressed).
  */
 export default function ThemeToggle({ variant = 'inline', className = '' }) {
   const { theme, setTheme, toggleTheme } = useStudioTheme()
@@ -12,8 +13,8 @@ export default function ThemeToggle({ variant = 'inline', className = '' }) {
   if (variant === 'pair') {
     return (
       <p className={`caption text-ink-soft ${className}`}>
-        Theme:{' '}
-        {Object.entries(LABELS).map(([id, label], i) => (
+        Look:{' '}
+        {Object.entries(THEME_LABELS).map(([id, label], i) => (
           <span key={id}>
             {i > 0 && ' · '}
             <button
@@ -30,15 +31,16 @@ export default function ThemeToggle({ variant = 'inline', className = '' }) {
     )
   }
 
-  const next = theme === 'light' ? 'dark' : 'light'
+  const next = theme === 'teal' ? 'blue' : 'teal'
+  const label = `Switch to the ${THEME_LABELS[next].toLowerCase()} look`
   return (
     <button
       type="button"
-      className={`nav-link ${className}`}
-      aria-label={`Switch to the ${LABELS[next].toLowerCase()} look`}
+      className={`look-dot ${className}`}
+      style={{ '--look-next': SWATCH[next] }}
+      aria-label={label}
+      title={label}
       onClick={toggleTheme}
-    >
-      {LABELS[next]}
-    </button>
+    />
   )
 }

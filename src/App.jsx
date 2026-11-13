@@ -8,6 +8,7 @@ import { StudioProvider } from './context/StudioContext'
 import { StudioThemeProvider } from './context/StudioThemeContext'
 import { TenantProvider } from './context/TenantContext'
 import { ViewerProvider } from './context/ViewerContext'
+import Bubbles from './components/layout/Bubbles'
 import { ToastProvider } from './components/ui/Toast'
 import { TopProgressProvider } from './components/ui/TopProgress'
 import { ForbidRoles, GuestOnly, RequireAuth, RoleIndex } from './routes/guards'
@@ -41,8 +42,9 @@ function ProfileRedirect() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <StudioThemeProvider>
+      <Bubbles />
       <ToastProvider>
         <TopProgressProvider>
           <AuthProvider>

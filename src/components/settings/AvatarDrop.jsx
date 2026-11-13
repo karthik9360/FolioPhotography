@@ -72,7 +72,7 @@ export default function AvatarDrop({ value, initials, onChange, dirty = false })
           {value ? (
             <img src={value} alt="" className="h-full w-full object-cover" />
           ) : (
-            <span aria-hidden="true" className="font-display text-base tracking-[0.06em]">
+            <span aria-hidden="true" className="font-display text-xl">
               {initials}
             </span>
           )}

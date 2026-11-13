@@ -1,4 +1,4 @@
-/** A small square plate (never a circle): the user's photograph if they set one, otherwise their initials. */
+/** A small rounded-square plate (never a circle): the user's photograph if they set one, otherwise their initials. */
 export default function Avatar({ user, size = 40 }) {
   if (user.avatarUrl) {
     return (
@@ -6,7 +6,7 @@ export default function Avatar({ user, size = 40 }) {
         src={user.avatarUrl}
         alt=""
         aria-hidden="true"
-        className="flex-none object-cover"
+        className="rounded-tile flex-none object-cover"
         style={{ width: size, height: size }}
       />
     )
@@ -14,7 +14,7 @@ export default function Avatar({ user, size = 40 }) {
   return (
     <span
       aria-hidden="true"
-      className="label grid flex-none place-items-center bg-ink !tracking-[0.08em] text-paper"
+      className="label rounded-tile grid flex-none place-items-center bg-signal !tracking-[0.06em] text-on-accent"
       style={{ width: size, height: size }}
     >
       {user.initials}

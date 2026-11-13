@@ -193,7 +193,7 @@ export default function ExplorePage() {
               {results.map((row) => (
                 <li key={row.id}>
                   <Link to={row.href} className="index-row index-row--feeds">
-                    <span className="font-display text-sm leading-tight tracking-[0.01em]">{row.title}</span>
+                    <span className="font-display text-base leading-tight">{row.title}</span>
                     <span>@{row.handle}</span>
                     <span className="text-ink-soft">{row.category}</span>
                     <span className="index-thumb" aria-hidden="true">

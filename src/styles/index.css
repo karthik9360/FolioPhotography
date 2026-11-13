@@ -1,82 +1,103 @@
-@import "@fontsource-variable/bodoni-moda/opsz.css";
-@import "@fontsource-variable/hanken-grotesk";
-@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource/galada/latin-400.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/manrope";
 @import "@fontsource/geist-mono/400.css";
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
 /* Tokens. Mirrors DESIGN.md; change both together.                    */
-/* The values below are Studio Dark, the default. Studio Light is the   */
-/* override block after this one, switched by data-theme on <html>      */
-/* (see StudioThemeContext).                                            */
+/* Two moods share one set of tokens: Teal (default) and Blue. The      */
+/* mood is one attribute on <html> (data-theme, see StudioThemeContext).*/
+/* The three gradient colours are registered, so the browser animates   */
+/* them and a change of mood morphs the whole page in 1.5s.             */
 /* ------------------------------------------------------------------ */
+@property --bg-inner {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0b8a78;
+}
+@property --bg-mid {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #044e3b;
+}
+@property --bg-outer {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #011411;
+}
+/* How much the page is darkened under working screens. 0 on the home hero. */
+@property --shade {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.5;
+}
+
 @theme {
-  /* Warm linen: the default. Base, panels, text, and two accents (gold and olive). */
-  --color-paper: #f5f5f0; /* base: bone-white linen */
-  --color-paper-bright: #f0ede6; /* panels and sheets: muted ivory */
-  --color-photo-wash: #eae7e0; /* champagne taupe: placeholders, drop zones, hover fills */
-  --color-ink: #1f1f1e; /* soft obsidian charcoal: text and headings */
-  --color-ink-soft: #66635d; /* warm grey: secondary text (4.8:1 or better on every surface) */
-  --color-hairline: #d9d4c8; /* very thin lines */
-  --color-signal: #c5a880; /* muted gold: active underlines, loading strip, confirmation buttons. Never text on light. */
-  --color-accent-2: #8c927d; /* architectural olive: hover shift on confirmation buttons, online marks, approvals */
-  --color-on-accent: #1f1f1e; /* text on gold or olive */
+  /* Surfaces follow the gradient, so they morph with it. */
+  --color-paper: var(--bg-outer); /* deepest tone: text on white, solid fills */
+  --color-paper-bright: color-mix(in srgb, var(--bg-mid) 72%, var(--bg-outer)); /* sheets and panels */
+  --color-photo-wash: rgb(255 255 255 / 0.07); /* glass: placeholders, drop zones, bubbles of text */
+  --color-ink: #ffffff; /* text */
+  --color-ink-soft: rgb(255 255 255 / 0.76); /* secondary text, 4.5:1 or better on every surface */
+  --color-hairline: rgb(255 255 255 / 0.16); /* the only line weight: 1px, glass-bright */
+  --color-signal: #fbcfe8; /* pink: active pill, loading strip, confirmation buttons, the frame on a hovered work */
+  --color-accent-2: #a7f3d0; /* mint: online marks, approvals */
+  --color-on-accent: #011d17; /* text on pink or mint */
   --color-darkroom: #0a0a0a;
   --color-darkroom-text: #f5f5f0;
   --color-darkroom-dim: #b4b3ad;
-  --color-scrollbar: #bdb7aa;
+  --color-scrollbar: rgb(255 255 255 / 0.28);
 
-  /* Compact type scale. Nothing is larger than 1rem: text-xl and up are all capped. */
   --text-micro: 0.625rem;
   --text-micro--line-height: 1.3;
   --text-compact: 0.6875rem;
   --text-compact--line-height: 1.35;
-  --text-xl: 1rem;
-  --text-2xl: 1rem;
-  --text-3xl: 1rem;
-  --text-4xl: 1rem;
-  --text-5xl: 1rem;
-  --text-6xl: 1rem;
-  --text-7xl: 1rem;
-  --text-8xl: 1rem;
-  --text-9xl: 1rem;
-  --text-xl--line-height: 1.2;
-  --text-2xl--line-height: 1.2;
-  --text-3xl--line-height: 1.2;
-  --text-4xl--line-height: 1.2;
-  --text-5xl--line-height: 1.2;
-  --text-6xl--line-height: 1.2;
-  --text-7xl--line-height: 1.2;
-  --text-8xl--line-height: 1.2;
-  --text-9xl--line-height: 1.2;
 
-  --font-display: "Bodoni Moda Variable", Didot, "Bodoni 72", serif;
-  --font-sans: "Hanken Grotesk Variable", system-ui, sans-serif;
-  --font-condensed: "Archivo Variable", "Arial Narrow", system-ui, sans-serif;
+  /* Galada for headings, Inter for reading, Manrope for navigation and labels, Geist Mono for data. */
+  --font-display: "Galada", "Brush Script MT", cursive;
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-condensed: "Manrope Variable", system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
 
+  --radius-card: 28px;
+  --radius-pill: 100px;
+  --radius-tile: 12px;
+
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-morph: cubic-bezier(0.455, 0.03, 0.515, 0.955); /* GSAP power2.inOut */
+  --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   --default-transition-duration: 160ms;
 
-  --shadow-drawer: 0 24px 64px -24px rgb(31 31 30 / 0.3);
+  --shadow-drawer: 0 24px 64px -24px rgb(0 0 0 / 0.55);
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
+  /* Teal, the default mood. */
+  --bg-inner: #0b8a78;
+  --bg-mid: #044e3b;
+  --bg-outer: #011411;
+  --shade: 0.5;
+  --header-h: 64px;
+  transition:
+    --bg-inner 1.5s var(--ease-morph),
+    --bg-mid 1.5s var(--ease-morph),
+    --bg-outer 1.5s var(--ease-morph),
+    --shade 1.2s var(--ease-morph);
 }
 
-/* Studio Dark, the other option: onyx, bone and taupe, with the same gold and olive. */
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --color-paper: #0a0a0a;
-  --color-paper-bright: #141413;
-  --color-photo-wash: #161615;
-  --color-ink: #f5f5f5;
-  --color-ink-soft: #8a8a85;
-  --color-hairline: #2a2a28;
-  --color-scrollbar: #4a4a47;
-  --shadow-drawer: 0 24px 64px -24px rgb(0 0 0 / 0.55);
+/* Blue, the other mood. */
+:root[data-theme="blue"] {
+  --bg-inner: #0b4f8a;
+  --bg-mid: #04294e;
+  --bg-outer: #010c14;
+}
+
+/* The home hero shows the gradient at full strength. */
+:root[data-surface="hero"] {
+  --shade: 0;
 }
 
 :root {
@@ -103,7 +124,7 @@
 /* ------------------------------------------------------------------ */
 @layer base {
   html {
-    background: var(--color-paper);
+    background: var(--bg-outer);
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -116,6 +137,24 @@
     min-height: 100svh;
     font-size: 0.75rem;
     line-height: 1.4;
+  }
+
+  /* The gradient lives on a fixed layer behind everything, with a shade over it. */
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+  body::before {
+    z-index: -3;
+    background: radial-gradient(circle at center, var(--bg-inner) 0%, var(--bg-mid) 50%, var(--bg-outer) 100%);
+  }
+  body::after {
+    z-index: -2;
+    background: var(--bg-outer);
+    opacity: var(--shade);
   }
 
   :root:has(dialog[open]) {
@@ -159,7 +198,9 @@
   }
   ::-webkit-scrollbar-thumb {
     background: var(--color-scrollbar);
-    border: 3px solid var(--color-paper);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    border-radius: 100px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
@@ -177,34 +218,39 @@
     padding-inline: var(--margin);
   }
 
-  /* Headers: a high-contrast serif in small capitals with open tracking. Bodoni's optical sizing
-     (font-optical-sizing: auto) thickens the hairlines for small sizes. Never larger than 1rem. */
+  /* Headings: Galada, a cursive face, in sentence case with normal tracking. */
   .display {
     font-family: var(--font-display);
-    font-size: 1rem;
-    line-height: 1.2;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-optical-sizing: auto;
+    font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: normal;
   }
 
   .headline {
     font-family: var(--font-display);
-    font-size: 0.875rem;
-    line-height: 1.25;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-optical-sizing: auto;
+    font-size: 1.375rem;
+    line-height: 1.15;
+    letter-spacing: normal;
   }
 
-  /* Secondary indicators: uppercase, compressed width (Archivo at 75%), open tracking. */
+  /* The home hero's giant titles. */
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 10vw, 12rem);
+    line-height: 0.8;
+    font-weight: 400;
+    white-space: nowrap;
+    color: var(--color-ink);
+    letter-spacing: normal;
+  }
+
+  /* Small indicators: Manrope, uppercase, open tracking. */
   .label {
     font-family: var(--font-condensed);
-    font-stretch: 75%;
     font-size: 0.6875rem;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.2;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
@@ -225,6 +271,16 @@
     max-width: 68ch;
   }
 
+  /* Glass: a translucent panel that blurs the gradient behind it. */
+  .glass {
+    background: rgb(255 255 255 / 0.08);
+    border: 1px solid rgb(255 255 255 / 0.2);
+    box-shadow:
+      0 8px 32px rgb(0 0 0 / 0.1),
+      inset 0 0 0 1px rgb(255 255 255 / 0.1);
+    backdrop-filter: blur(20px);
+  }
+
   /* ---------------------------------------------------------------- */
   /* Buttons                                                           */
   /* ---------------------------------------------------------------- */
@@ -234,56 +290,56 @@
     justify-content: center;
     gap: 0.5rem;
     height: 32px;
-    padding-inline: 16px;
+    padding-inline: 18px;
     border: 1px solid transparent;
+    border-radius: var(--radius-pill);
     font-family: var(--font-condensed);
-    font-stretch: 75%;
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
     white-space: nowrap;
     transition:
-      background-color var(--dur-fast) var(--ease-premium),
-      color var(--dur-fast) var(--ease-premium),
-      border-color var(--dur-fast) var(--ease-premium),
-      transform var(--dur-fast) var(--ease-premium);
+      background-color 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease,
+      transform 0.3s ease;
+  }
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
   }
   .btn:active:not(:disabled) {
-    transform: translateY(1px);
+    transform: translateY(0);
   }
   .btn:disabled {
     opacity: 0.4;
     pointer-events: none;
   }
-  /* Confirmation buttons: muted gold, charcoal text; they shift to olive on hover. */
+  /* Confirmation buttons: pink with deep-green text. */
   .btn-primary {
     background: var(--color-signal);
     color: var(--color-on-accent);
   }
   .btn-primary:hover {
-    background: var(--color-accent-2);
+    background: #fde7f3;
   }
+  /* Quiet buttons: a dark glass pill. */
   .btn-quiet {
-    background: transparent;
+    background: rgb(0 0 0 / 0.5);
     color: var(--color-ink);
-    border-color: var(--color-ink);
   }
   .btn-quiet:hover {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: rgb(0 0 0 / 0.7);
   }
   .btn-quiet[aria-pressed="true"] {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-signal);
+    color: var(--color-on-accent);
   }
   .darkroom .btn-quiet {
+    background: rgb(255 255 255 / 0.14);
     color: var(--color-darkroom-text);
-    border-color: var(--color-darkroom-text);
   }
   .darkroom .btn-quiet:hover {
-    background: var(--color-darkroom-text);
-    color: var(--color-darkroom);
+    background: rgb(255 255 255 / 0.26);
   }
 
   .icon-btn {
@@ -291,9 +347,14 @@
     place-items: center;
     width: 32px;
     height: 32px;
+    border-radius: 50%;
     transition:
       color var(--dur-fast) var(--ease-premium),
+      background-color var(--dur-fast) var(--ease-premium),
       transform var(--dur-fast) var(--ease-premium);
+  }
+  .icon-btn:hover {
+    background: rgb(255 255 255 / 0.1);
   }
   .icon-btn:active {
     transform: scale(0.95);
@@ -316,7 +377,7 @@
 
   .nav-link,
   .tab {
-    text-transform: inherit; /* buttons reset this; inherit the .label caps */
+    text-transform: inherit;
   }
 
   .nav-link {
@@ -351,6 +412,111 @@
   }
 
   /* ---------------------------------------------------------------- */
+  /* Header: the logo, a glass pill of destinations, one pill button   */
+  /* ---------------------------------------------------------------- */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  /* A soft blurred band so content passing under the header stays out of the way of the pill. */
+  .site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 -20px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgb(1 20 17 / 0.5), transparent);
+    backdrop-filter: blur(10px);
+    mask-image: linear-gradient(to bottom, #000 60%, transparent);
+  }
+  .header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: var(--header-h);
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: var(--margin);
+  }
+  /* The home hero uses the brief's wider 4% margins. */
+  :root[data-surface="hero"] .header-bar {
+    max-width: none;
+    padding-inline: 4%;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--color-ink);
+  }
+  .nav-pill {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    border-radius: var(--radius-pill);
+  }
+  .nav-item {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-condensed);
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-ink-soft);
+    padding: 0.55rem 1.1rem;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+  .nav-item:hover,
+  .nav-item[aria-current="page"] {
+    background: var(--color-signal);
+    color: var(--color-on-accent);
+  }
+  .pill-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.5rem;
+    border-radius: var(--radius-pill);
+    background: rgb(0 0 0 / 0.5);
+    color: var(--color-ink);
+    font-family: var(--font-condensed);
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+  .pill-btn:hover {
+    background: rgb(0 0 0 / 0.7);
+    transform: translateY(-2px);
+  }
+  /* The mood switch: a small round swatch showing the mood you would switch to. */
+  .look-dot {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgb(255 255 255 / 0.3);
+    background: var(--look-next, #0b4f8a);
+    box-shadow: inset 0 0 0 4px rgb(255 255 255 / 0.1);
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease;
+  }
+  .look-dot:hover {
+    transform: translateY(-2px) rotate(-12deg);
+    border-color: var(--color-signal);
+  }
+
+  /* ---------------------------------------------------------------- */
   /* Gallery                                                           */
   /* ---------------------------------------------------------------- */
   .photo-tile {
@@ -362,6 +528,7 @@
   .photo-frame {
     position: relative;
     overflow: hidden;
+    border-radius: var(--radius-card);
     background: var(--color-photo-wash);
   }
   .photo-frame img {
@@ -431,6 +598,7 @@
   .lookbook-stage {
     position: relative;
     overflow: hidden;
+    border-radius: var(--radius-card);
     background: var(--color-photo-wash);
   }
   .lookbook-open {
@@ -450,11 +618,12 @@
       transform 240ms var(--ease-premium),
       filter 240ms var(--ease-premium);
   }
-  /* A thin gold frame fades in around the work on hover or keyboard focus. */
+  /* A thin pink frame fades in around the work on hover or keyboard focus. */
   .lookbook-stage::after {
     content: "";
     position: absolute;
     inset: 0;
+    border-radius: inherit;
     box-shadow: inset 0 0 0 1px var(--color-signal);
     opacity: 0;
     pointer-events: none;
@@ -467,12 +636,13 @@
     outline-offset: -3px;
   }
 
-  /* The overlay: a borderless canvas that glides up from the bottom edge of the frame. */
+  /* The overlay: a glass sheet that glides up from the bottom edge of the frame. */
   .lookbook-overlay {
     display: grid;
     gap: 8px;
-    padding: 10px 12px 12px;
-    background: color-mix(in srgb, var(--color-paper) 97%, transparent);
+    padding: 10px 14px 14px;
+    background: color-mix(in srgb, var(--color-paper) 90%, transparent);
+    backdrop-filter: blur(14px);
     color: var(--color-ink);
   }
   .lookbook-note {
@@ -497,6 +667,7 @@
   @media (hover: hover) {
     .lookbook-frame {
       overflow: hidden;
+      border-radius: var(--radius-card);
     }
     .lookbook-overlay {
       position: absolute;
@@ -505,13 +676,9 @@
       transform: translateY(100%);
       transition: transform 170ms var(--ease-premium);
     }
-    .lookbook-stage img {
-      filter: grayscale(0.55) sepia(0.2);
-    }
     .lookbook-cell:hover .lookbook-stage img,
     .lookbook-cell:has(:focus-visible) .lookbook-stage img {
       transform: translate3d(calc(var(--px, 0) * -0.9%), calc(var(--py, 0) * -0.9%), 0) scale(1.025);
-      filter: grayscale(0);
     }
     .lookbook-cell:hover .lookbook-stage::after,
     .lookbook-cell:has(:focus-visible) .lookbook-stage::after {
@@ -572,9 +739,9 @@
     color: var(--color-ink);
     caret-color: var(--color-ink);
     font-family: var(--font-display);
-    font-size: 1rem;
+    font-size: 1.5rem;
     line-height: 1.3;
-    letter-spacing: 0.06em;
+    letter-spacing: normal;
     appearance: none;
   }
   .index-input::placeholder {
@@ -723,7 +890,8 @@
   .sheet-scrim {
     position: absolute;
     inset: 0;
-    background: rgb(13 13 12 / 0.48);
+    background: rgb(1 20 17 / 0.6);
+    backdrop-filter: blur(6px);
     opacity: 0;
     transition: opacity var(--dur-sheet) var(--ease-premium);
   }
@@ -739,6 +907,7 @@
     width: min(520px, 100%);
     overflow-y: auto;
     background: var(--color-paper-bright);
+    border-radius: var(--radius-card) 0 0 var(--radius-card);
     box-shadow: var(--shadow-drawer);
     transform: translateX(100%);
     transition: transform var(--dur-sheet) var(--ease-premium);
@@ -815,7 +984,7 @@
     color: var(--color-ink);
     font: inherit;
     font-size: 0.6875rem;
-    color-scheme: light;
+    color-scheme: dark;
     transition:
       border-color 160ms var(--ease-premium),
       box-shadow 160ms var(--ease-premium);
@@ -920,7 +1089,7 @@
     height: 16px;
     background: var(--color-ink);
     border: 2px solid var(--color-paper-bright);
-    border-radius: 0;
+    border-radius: 50%;
     cursor: grab;
     transition: background-color var(--dur-fast) var(--ease-premium);
   }
@@ -930,7 +1099,7 @@
     height: 12px;
     background: var(--color-ink);
     border: 2px solid var(--color-paper-bright);
-    border-radius: 0;
+    border-radius: 50%;
     cursor: grab;
   }
   .range input[type="range"]:hover::-webkit-slider-thumb,
@@ -955,7 +1124,6 @@
     min-height: 100svh;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    background: var(--color-paper);
   }
   @media (min-width: 1024px) {
     .auth-shell {
@@ -969,14 +1137,17 @@
     position: relative;
     height: 30svh;
     min-height: 200px;
+    margin: var(--margin) var(--margin) 0;
     overflow: hidden;
+    border-radius: var(--radius-card);
     background: var(--color-darkroom);
   }
   @media (min-width: 1024px) {
     .auth-media {
       position: sticky;
-      top: 0;
-      height: 100svh;
+      top: 16px;
+      height: calc(100svh - 32px);
+      margin: 16px 0 16px 16px;
     }
   }
   .auth-slide {
@@ -1007,7 +1178,8 @@
     position: absolute;
     left: var(--margin);
     bottom: var(--margin);
-    padding: 6px 10px;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
     background: var(--color-ink);
     color: var(--color-paper);
   }
@@ -1059,11 +1231,9 @@
 
   .auth-title {
     font-family: var(--font-display);
-    font-size: 1rem;
-    line-height: 1.25;
-    text-transform: uppercase;
-    font-optical-sizing: auto;
-    letter-spacing: 0.12em;
+    font-size: 2rem;
+    line-height: 1.1;
+    letter-spacing: normal;
     text-wrap: balance;
   }
   .auth-title:focus {
@@ -1247,9 +1417,9 @@
   .btn-auth {
     position: relative;
     width: 100%;
-    height: 36px;
+    height: 40px;
     overflow: hidden;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.02em;
   }
   .btn-auth[aria-busy="true"] {
     pointer-events: none;
@@ -1295,7 +1465,7 @@
     border-radius: 0;
     color: var(--color-ink);
     font-family: var(--font-display);
-    font-size: 1rem;
+    font-size: 1.5rem;
     line-height: 1;
     caret-color: var(--color-ink);
     transition:
@@ -1358,7 +1528,8 @@
     place-items: center;
     width: 36px;
     height: 36px;
-    background: var(--color-paper-bright);
+    border-radius: 50%;
+    background: rgb(0 0 0 / 0.5);
     color: var(--color-ink);
     opacity: 0;
     transform: translateY(-50%);
@@ -1368,8 +1539,8 @@
       color var(--dur-fast) var(--ease-premium);
   }
   .carousel-btn:hover {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-signal);
+    color: var(--color-on-accent);
   }
   .carousel-btn:focus-visible {
     opacity: 1;
@@ -1462,6 +1633,7 @@
     gap: 12px;
     width: min(20rem, 82%);
     padding: 10px;
+    border-radius: 18px;
     background: var(--color-photo-wash);
     color: var(--color-ink);
     transition: background-color var(--dur-fast) var(--ease-premium);
@@ -1473,8 +1645,8 @@
     object-fit: cover;
   }
   .shared-post--own {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-signal);
+    color: var(--color-on-accent);
   }
   .shared-post:hover .label {
     text-decoration: underline;
@@ -1590,6 +1762,7 @@
     position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
+    border-radius: 20px;
     background: var(--color-photo-wash);
     cursor: grab;
     touch-action: pan-y;
@@ -1620,7 +1793,7 @@
   }
   .pile[data-over="true"] {
     box-shadow: inset 0 2px 0 var(--color-signal);
-    background: rgb(11 47 208 / 0.04);
+    background: rgb(255 255 255 / 0.05);
   }
   .swatch {
     width: 14px;
@@ -1663,7 +1836,7 @@
   /* Workspaces (Lookbook, Upload, Review...) hand over the same way: out 120ms, in 180ms. */
   .workspace-stage {
     display: grid;
-    min-height: calc(100svh - 48px);
+    min-height: calc(100svh - var(--header-h));
     align-content: start;
   }
   .workspace-layer {
@@ -1709,13 +1882,11 @@
     background: var(--color-signal);
     color: var(--color-on-accent);
     font-family: var(--font-condensed);
-    font-stretch: 75%;
-    font-size: 0.6875rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     line-height: 1.3;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.02em;
     text-align: center;
-    text-transform: uppercase;
     animation: toast-in 180ms var(--ease-premium) both;
   }
   .toast[data-tone="error"] {
@@ -1798,6 +1969,7 @@
     height: 26px;
     margin-top: 2px;
     border: 1px solid var(--color-ink);
+    border-radius: var(--radius-pill);
     background: transparent;
     transition: background-color var(--dur-base) var(--ease-premium);
   }
@@ -1807,6 +1979,7 @@
     left: 3px;
     width: 18px;
     height: 18px;
+    border-radius: 50%;
     background: var(--color-ink);
     transition:
       transform var(--dur-base) var(--ease-premium),
@@ -1854,13 +2027,14 @@
   .drop {
     display: block;
     padding: 24px 16px;
+    border-radius: var(--radius-card);
     background: var(--color-photo-wash);
     cursor: pointer;
     transition: background-color 160ms var(--ease-premium);
   }
   .drop[data-over="true"],
   .drop:hover {
-    background: color-mix(in srgb, var(--color-photo-wash) 86%, var(--color-signal));
+    background: rgb(255 255 255 / 0.13);
   }
   .drop:focus-within {
     outline: 2px solid var(--color-ink);
@@ -1872,7 +2046,8 @@
     position: absolute;
     left: 8px;
     bottom: 8px;
-    padding: 2px 6px;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
     background: var(--color-paper);
     color: var(--color-ink);
   }
@@ -1884,6 +2059,7 @@
     width: 112px;
     height: 112px;
     overflow: hidden;
+    border-radius: var(--radius-tile);
     background: var(--color-ink);
     color: var(--color-paper);
     cursor: pointer;
@@ -1902,7 +2078,7 @@
 
   /* ---- messages ---- */
   .messages-shell {
-    height: calc(100svh - 48px);
+    height: calc(100svh - var(--header-h));
     padding-block: 8px 12px;
   }
   .thread {
@@ -1911,6 +2087,7 @@
     gap: 14px;
     margin-inline: -12px;
     padding: 14px 12px;
+    border-radius: var(--radius-tile);
     transition: background-color var(--dur-fast) var(--ease-premium);
   }
   .thread:hover {
@@ -1925,6 +2102,7 @@
     bottom: -1px;
     width: 11px;
     height: 11px;
+    border-radius: 50%;
     border: 1px solid var(--color-paper);
     background: var(--color-paper);
     box-shadow: inset 0 0 0 1px var(--color-ink-soft);
@@ -1936,15 +2114,17 @@
   .unread {
     flex: none;
     min-width: 20px;
-    padding: 1px 6px;
-    background: var(--color-ink);
-    color: var(--color-paper);
+    padding: 1px 7px;
+    border-radius: var(--radius-pill);
+    background: var(--color-signal);
+    color: var(--color-on-accent);
     text-align: center;
   }
 
   .msg {
     max-width: min(30rem, 82%);
     padding: 10px 14px;
+    border-radius: 18px;
     background: var(--color-photo-wash);
     color: var(--color-ink);
     line-height: 1.45;
@@ -1952,8 +2132,8 @@
     overflow-wrap: anywhere;
   }
   .msg--own {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-signal);
+    color: var(--color-on-accent);
   }
   /* Messages rise into place: a short upward translate and fade, staggered by position. */
   .msg-in {
@@ -2026,12 +2206,408 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Bubbles and the home hero                                            */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Bubbles rise behind everything (above the gradient, below the page). */
+  .bubbles {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .bubble {
+    position: absolute;
+    bottom: -50px;
+    border-radius: 50%;
+    opacity: 0;
+    background: radial-gradient(
+      circle at 32% 28%,
+      rgb(255 255 255 / 0.9) 0 7%,
+      rgb(255 255 255 / 0.2) 24%,
+      rgb(255 255 255 / 0.05) 62%,
+      transparent 70%
+    );
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.32);
+    animation: floatUpImg linear forwards;
+  }
+  @keyframes floatUpImg {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: var(--peak, 0.4);
+    }
+    90% {
+      opacity: var(--peak, 0.4);
+    }
+    100% {
+      transform: translateY(-110vh) translateX(30px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100svh;
+    padding: 5rem 4% 0;
+    overflow: clip; /* drifting prints never make the page scroll, sideways or down */
+  }
+  /* A faint green wash behind the lens. */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at center, rgb(16 185 129 / 0.1) 0%, transparent 70%);
+  }
+  .hero-content {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-left,
+  .hero-right {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 6rem 0;
+  }
+  .hero-left {
+    gap: 2rem;
+  }
+  .hero-right {
+    justify-content: space-between;
+    align-items: flex-end;
+    text-align: right;
+    width: 450px;
+    pointer-events: none;
+  }
+  .side-title {
+    align-self: flex-end;
+    text-align: right;
+  }
+  .hero-desc {
+    max-width: 400px;
+    color: var(--color-ink-soft);
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .primary-btn {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: fit-content;
+    padding: 0.4rem 0.4rem 0.4rem 1.5rem;
+    border-radius: var(--radius-pill);
+    background: rgb(0 0 0 / 0.5);
+    color: var(--color-ink);
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    transition: all 0.3s ease;
+  }
+  .primary-btn:hover {
+    background: rgb(0 0 0 / 0.7);
+    transform: translateY(-3px);
+  }
+  .plus-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding-bottom: 2px;
+    border-radius: 50%;
+    background: var(--color-signal);
+    color: var(--color-on-accent);
+    font-size: 1.4rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .award-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto;
+  }
+  .award-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 12px;
+    background: rgb(255 255 255 / 0.05);
+  }
+  .award-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .award-title {
+    font-family: var(--font-condensed);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-soft);
+  }
+  .award-subtitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .hero-note {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.75rem;
+    z-index: 100;
+    text-align: center;
+  }
+
+  /* Floating prints (the brief's leaves). */
+  .leaves-container {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .leaf {
+    position: absolute;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 3px solid rgb(255 255 255 / 0.92);
+    border-radius: 10px;
+    filter: drop-shadow(0 5px 15px rgb(0 0 0 / 0.2));
+    pointer-events: none;
+  }
+
+  /* The two WebGL layers: one behind the text (with the lens), one above it. The lens fades in over
+     1.5s after a 0.3s pause and bobs 20px, forever. */
+  .hero-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    animation: fadeIn 1.5s ease-out 0.3s forwards;
+  }
+  .hero-canvas--back {
+    z-index: 1;
+    animation:
+      fadeIn 1.5s ease-out 0.3s forwards,
+      float 6s ease-in-out infinite;
+  }
+  .hero-canvas--front {
+    z-index: 110;
+  }
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  /* The two look cards. */
+  .product-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1.5rem;
+    pointer-events: auto;
+  }
+  .carousel-cards {
+    display: flex;
+    gap: 1rem;
+  }
+  .look-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 135px;
+    padding: 5rem 1rem 1rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 28px;
+    background: rgb(255 255 255 / 0.05);
+    backdrop-filter: blur(10px);
+    color: var(--color-ink);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s var(--ease-bounce);
+  }
+  .look-card:hover {
+    background: rgb(255 255 255 / 0.12);
+    border-color: rgb(255 255 255 / 0.4);
+  }
+  .look-card.active {
+    border-color: var(--color-signal);
+    background: rgb(255 255 255 / 0.05);
+  }
+  .look-art {
+    width: 140px;
+    height: auto;
+    margin-top: -8rem;
+    flex: none;
+    filter: drop-shadow(0 20px 35px rgb(0 0 0 / 0.5));
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+    pointer-events: none;
+  }
+  .look-card:hover .look-art {
+    transform: translateY(-30px) rotate(-12deg) scale(1.15);
+  }
+  .card-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: 0.7rem;
+    overflow-wrap: break-word;
+  }
+  .card-info span:first-child {
+    font-weight: 600;
+  }
+  .card-info span:last-child {
+    color: var(--color-ink-soft);
+  }
+  .carousel-nav {
+    display: flex;
+    gap: 1rem;
+  }
+  .nav-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.05);
+    color: var(--color-ink);
+    transition: background 0.3s;
+  }
+  .nav-arrow:hover {
+    background: rgb(255 255 255 / 0.1);
+  }
+
+  /* A wide window shows the hero as one screen: the header floats, the page does not scroll. */
+  @media (min-width: 1200px) {
+    :root[data-surface="hero"] {
+      --header-h: 88px;
+    }
+    :root[data-surface="hero"] body {
+      overflow: hidden;
+      height: 100svh;
+    }
+    :root[data-surface="hero"] .site-header {
+      position: fixed;
+      left: 0;
+      right: 0;
+    }
+    :root[data-surface="hero"] .site-header::before {
+      display: none;
+    }
+    :root[data-surface="hero"] .site-footer {
+      display: none;
+    }
+  }
+
+  /* Narrower windows stack the hero and let the page scroll. The rings above the text are a wide-window flourish. */
+  @media (max-width: 1199.98px) {
+    .hero {
+      display: block;
+      height: auto;
+      min-height: 100svh;
+      padding-top: 6rem;
+      padding-bottom: 2.5rem;
+    }
+    /* The lens gets its own band at the top (the brief's order: -1); the text flows beneath it. */
+    .hero-content {
+      position: static;
+      flex-direction: column;
+      gap: 2.5rem;
+      height: auto;
+    }
+    .hero-canvas--back {
+      position: absolute;
+      inset: auto;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: min(72svh, 640px);
+    }
+    .hero-left,
+    .hero-right {
+      height: auto;
+      padding: 0;
+    }
+    .hero-left {
+      gap: 1.5rem;
+      padding-top: calc(min(72svh, 640px) - 10.5rem);
+    }
+    .hero-right {
+      width: 100%;
+      align-items: center;
+      gap: 2.5rem;
+      padding-top: 5rem;
+      text-align: center;
+    }
+    .side-title {
+      align-self: center;
+      text-align: center;
+    }
+    .product-carousel {
+      align-items: center;
+    }
+    .hero-title {
+      font-size: 5rem;
+    }
+    .hero-note {
+      position: static;
+      padding-top: 1.5rem;
+    }
+    .hero-canvas--front {
+      display: none;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion                                                      */
 /* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   .typing i {
     animation: none;
     opacity: 0.7;
+  }
+  /* No fade, no bobbing: the lens is simply there. */
+  .hero-canvas {
+    animation: none !important;
+    opacity: 1;
   }
   *,
   *::before,
